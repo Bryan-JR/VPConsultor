@@ -1,2 +1,10 @@
 consultaRef/static/img/productos
 consultaRef/static/img/ProductosRaiz
+
+# Ignorar archivos específicos
+*.log
+*.env
+secret.txt
+
+# Ignorar la carpeta de entornos virtuales de Python
+venv/
