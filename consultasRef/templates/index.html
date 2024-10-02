@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración Referencias</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="max-w-xl w-full p-6 bg-white mx-auto my-8 py-4 border border-gray-200 rounded-lg shadow">
+        <h2 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900">Actualizar precios</h2>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" aria-describedby="user_avatar_help" id="file" name="file" type="file">
+            <div class="mt-1 text-sm text-gray-500" id="user_avatar_help">El archivo debe tener los encabezados definidos correctamente.</div>
+            <button type="submit" class="text-white block mx-auto w-full my-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">ACTUALIZAR</button>
+        </form>
+    </div>
+
+    
+<div class="relative overflow-x-auto p-8 shadow-md sm:rounded-lg">
+    <div class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white">
+        <label for="table-search" class="sr-only">Buscar</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input type="text" id="busqueda" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar referencia">
+        </div>
+    </div>
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Producto
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Descripcion
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Precioxmayor
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Precioxunidad
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    
+                </th>
+            </tr>
+        </thead>
+        <tbody id="tabBody">
+        </tbody>
+    </table>
+</div>
+    <script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/adminRef.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+</body>
+</html>

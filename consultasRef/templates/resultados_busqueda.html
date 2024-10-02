@@ -1,0 +1,22 @@
+<table class="tabla-resultados">
+    <thead>
+        <tr>
+            <th>Referencia</th>
+            <th>Descripción</th>
+            <th>Precio M</th>
+            <th>Precio U</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dato in resultados %}
+        <tr>
+            <td>{{ dato[0] }}</td>
+            <td>{{ dato[1] }}</td>
+            <td>${{ '{:,.0f}'.format(dato[2]) }}</td>
+            <td>${{ '{:,.0f}'.format(dato[3]) }}</td>
+            <td><a href="{{ url_for('editar', referencia=dato[0]) }}">Editar</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

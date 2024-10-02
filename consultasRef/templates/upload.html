@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceso & Carga de Archivos</title>
+    <link rel="stylesheet" href="/static/css/estiloS.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='img/logoB.png') }}" alt="LogoB" class="logoB">
+        <h1>Proceso & Carga de Archivos Lectores</h1>
+        <div>
+            <div id="file-status">
+                <!-- El estado de los archivos se mostrará aquí -->
+            </div>
+            <label id="error-message" class="error-label"></label> <!-- Mensaje de error -->
+        </div>
+        
+        <!-- Formulario para cargar archivo LPL -->
+        <form id="upload-lpl-form" onsubmit="uploadLPL(event)" enctype="multipart/form-data">
+            <button type="submit" class="secondary">Sincronizar precios</button>
+        </form>
+        <div>
+            Hay <strong id="cont">{{ contador }}</strong> productos registrados.
+        </div>
+        <h2 class="copyright">Copyright © 2024 por Dpto.Sistemas - Plasdecor de Montería S.A.S.</h2>
+    </div>
+
+    <!-- Indicador de carga -->
+    <div id="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="msg"></p>
+    </div>
+    <script src="{{ url_for('static', filename='js/sincronizaPrecios.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+

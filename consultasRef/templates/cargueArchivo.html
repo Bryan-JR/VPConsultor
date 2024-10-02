@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Precios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilosArchivo.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <!-- Imagen superior -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='img/LogoB.png') }}" alt="logo">
+        </div>
+        <h1>Gestión de Listas de Precios Lectores</h1>
+
+        <!-- Mensajes de flash -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <script>
+                    Swal.fire({
+                        icon: "{{ category }}",
+                        title: "{{ message }}",
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                </script>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Sección para cargar archivo Excel -->
+        <section>
+            <h2>Cargar Archivo de Lista de Precios</h2>
+            <form method="POST" enctype="multipart/form-data" action="{{ url_for('controllerArchivo.actualizarPrecios') }}">
+                <input type="file" name="file" required>
+                <div class="button-cargar"> 
+                    <button type="submit" class="btn-primary">Cargar</button>
+                </div>  
+            </form>
+        </section>
+
+        <!-- Sección para buscar productos -->
+        <section>
+            <h2>Buscar Información de Producto</h2><br>
+            <label for="busqueda">Código o Descripción:</label><br><br>
+            <input type="text" id="busqueda" name="busqueda" autocomplete="off">
+        </section>
+
+        <!-- Resultados de la búsqueda -->
+        <section id="resultados">
+            <table class="tabla-resultados">
+                <thead>
+                    <tr>
+                        <th>Referencia</th>
+                        <th>Descripción</th>
+                        <th>PrecioM</th>
+                        <th>PrecioU</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="resultados-busqueda">
+                    <!-- Los resultados se inyectarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#busqueda').on('input', function(){
+                var query = $(this).val();
+                if (query.length > 2) {
+                    $.ajax({
+                        url: '{{ url_for("controllerArchivo.buscar") }}',
+                        method: 'POST',
+                        data: {query: query},
+                        success: function(response) {
+                            $('#resultados-busqueda').empty();
+                            if (response.length > 0) {
+                                $.each(response, function(index, producto) {
+                                    $('#resultados-busqueda').append(`
+                                        <tr>
+                                            <td>${producto[0]}</td>
+                                            <td>${producto[1]}</td>
+                                            <td>${producto[2].toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}</td>
+                                            <td>${producto[3].toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}</td>
+                                            <td><a href="/editar/${producto[0]}">Editar</a></td>
+                                        </tr>
+                                    `);
+                                });
+                            } else {
+                                $('#resultados-busqueda').append('<tr><td colspan="5">No se encontraron resultados.</td></tr>');
+                            }
+                        }
+                    });
+                } else {
+                    $('#resultados-busqueda').empty();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

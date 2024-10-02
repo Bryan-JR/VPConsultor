@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de etiquetas - VP PLASDECOR</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white max-h-full h-full bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')]">
+ 
+ <div class="p-4">
+    <div class="">
+        <div class="grid grid-cols-3 gap-4 mb-4">
+            <div style="height: 10em; flex-direction: column;" class="flex col-span-1 items-center gap-6 py-4 rounded">
+                <img src="/static/img/Logo.png" class="mx-auto mb-2 w-48 " alt="PLASDECOR Logo" />
+                <h2 class="text-2xl justify-center text-center font-semibold">GENERADOR DE ETIQUETAS</h2>
+                <div>
+                    <button type="button" onclick="mandarLista();" class="text-white font-bold bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">ASIGNAR ETIQUETAS</button>
+                </div>
+            </div>
+            <div style="height: 20em;" class="shadow-md bg-white col-span-2 overflow-x-auto rounded">
+                <h2 class="text-2xl text-center mb-2 font-semibold block">LISTA ETIQUETAS</h2>
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 w-64">
+                                Producto
+                            </th>
+                            <th scope="col" class="text-center px-6 py-3">
+                                Cantidad
+                            </th>
+                            <th scope="col" class="text-center px-2 py-3"></th>
+                            <th scope="col" class="text-center px-2 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaE">
+                        <tr><td></td><td>Lista vacia</td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+       <div style="height: 25em;" class="flex bg-white shadow-md rounded">
+        <div class="relative w-full shadow-md overflow-x-auto sm:rounded-lg" >
+            <div class="fixed flex items-center bg-white p-2 w-full  overflow-x-auto overflow-y-auto justify-between flex-column md:flex-row flex-wrap mb-4">
+                <label for="table-search" class="sr-only">Buscar</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="text" id="busqRef" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar referencia">
+                </div>
+            </div>
+            <table style="margin-top: 4em;" class="w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Producto
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Descripcion
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Ref
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Precioxunidad
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Cantidad
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="respBus">
+                </tbody>
+            </table>
+        </div>
+       </div>
+    
+ </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+    <script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/etiquetas.js') }}"></script>
+</body>
+</html>

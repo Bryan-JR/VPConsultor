@@ -1,0 +1,145 @@
+/* Importar Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+/* Estilos generales */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f9fafb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.3s ease;
+}
+
+/* Contenedor principal */
+.container {
+    width: 80%;
+    max-width: 1000px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Encabezados */
+h1, h2 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #264ef8;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+h2 {
+    color: #ba0f5a;
+    margin-bottom: 15px;
+}
+
+/* Formularios */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+/* Campos de entrada */
+input[type="text"], input[type="file"], input[type="number"] {
+    padding: 15px;
+    border: 2px solid #264ef8;
+    width: 70%;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #ba0f5a;
+    box-shadow: 0 0 8px rgba(186, 15, 90, 0.4);
+}
+
+/* Botones */
+button {
+    background: linear-gradient(90deg, #264ef8 0%, #ba0f5a 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 10px 0;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Flash Messages */
+.flash-messages p {
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.flash-messages p.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
+.flash-messages p.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 2px solid #f5c6cb;
+}
+
+/* Tabla de resultados */
+.tabla-resultados {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tabla-resultados th, .tabla-resultados td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.tabla-resultados th {
+    background-color: #264ef8;
+    color: white;
+}
+
+.tabla-resultados tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.tabla-resultados a {
+    color: #264ef8;
+    text-decoration: none;
+}
+
+.tabla-resultados a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo para el logo */
+.logo-container img {
+    width: 150px;
+    height: auto;
+    margin-bottom: 25px;
+    transition: transform 0.3s
+}

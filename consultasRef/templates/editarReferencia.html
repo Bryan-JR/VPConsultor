@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Precios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilosArchivo.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <!-- Imagen superior -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='img/LogoB.png') }}" alt="logo">
+        </div>
+        <h1>Editar Precios para Referencia {{ referencia_data[0] }}</h1>
+
+        <!-- Mensajes de flash -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <script>
+                    Swal.fire({
+                        icon: "{{ category }}",
+                        title: "{{ message }}",
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                </script>
+                {% endfor %}
+<!--                 
+                <div class="flash-messages">
+                    
+                </div> -->
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="formulario-edicion">
+            <div class="form-group">
+                <label for="precio">Nuevo Precio M:</label>
+                <input type="number" name="precio" value="{{ '{:.0f}'.format(referencia_data[2]) }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="precio_iva">Nuevo Precio U:</label>
+                <input type="number" name="precio_iva" value="{{ '{:.0f}'.format(referencia_data[3]) }}" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn-primary">Guardar</button>
+                <a href="{{ url_for('controllerArchivo.actualizarPrecios') }}" class="regresar">Regresar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+

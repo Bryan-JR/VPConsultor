@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
+</head>
+<body>
+    <div id="connection-status">No hay conexión a Internet</div>
+    <main class="contenedor">
+        <section class="izq">
+            <div class="pink">
+                <div class="p-blue"></div>
+                <div class="p-pink"></div>
+            </div>
+            <div class="blue"></div>
+            <div id="img" class="img">
+                <img id="imagenP" class="imagenP op-0" onerror="this.onerror=null; this.src='/static/img/ProductosRaiz/noimage.jpg';" src="" alt="">
+            </div>
+        </section>
+        <section class="der">
+            <img class="logo" src="{{ url_for('static', filename='img/Logo.png') }}" alt="">
+            <div id="descripcion" class="des">CONSULTA EL PRECIO AQUÍ</div>
+            <div id="precio" class="precio flecha">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="300px" height="300px" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 14-4-4m4 4 4-4"/>
+                </svg> 
+            </div>
+            <div id="info" class="info down">
+                <p>CÓDIGO: <span id="codigo" class="txt"></span></p>
+                <p>P.L.U.: <span id="precioculto" class="txt"></span></p>
+                <p>U.E.: <span id="ue" class="txt"></span></p>
+            </div>
+        </section>
+        <input id="codBarras" type="text" name="codBarras" autocomplete="off" style="opacity: 0; position: absolute; left: 0; z-index: 0;">
+
+        
+    </main>
+    <script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lectores.js') }}"></script>
+    <script>
+        function updateOnlineStatus() {
+            const statusDiv = document.getElementById('connection-status');
+            if (!navigator.onLine) {
+                // Si no hay conexión
+                statusDiv.style.display = 'block';
+            } else {
+                // Si hay conexión
+                statusDiv.style.display = 'none';
+            }
+        }
+
+        // Detectar cambios en la conexión
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
+        // Comprobar el estado inicial de la conexión
+        updateOnlineStatus();
+    </script>
+</body>
+</html>

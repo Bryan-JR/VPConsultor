@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@100..900&family=Varela+Round&display=swap');
+
+*{
+    box-sizing: border-box;
+    font-family:  sans-serif;
+    font-style: normal;
+    padding: 0;
+    margin: 0;
+    overflow: none;
+}
+
+.contenedor{
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.izq{
+    width: 35%;
+    height: 100vh;
+    display: flex;
+}
+
+.der{
+    width: 65%;
+    height: 100vh;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    color: #BA0F5A;
+    text-shadow: 2px 2px 2px #727272;
+    /* background-image: url('../img/fondo.jpg');
+    background-size: cover;
+    background-position: center; */
+    
+}
+
+.txt{
+    color: #317FBF;
+}
+
+.logo{
+    width: 25em;
+}
+
+
+
+.pink{
+    display: flex;
+    width: 50%;
+    background-color: #BA0F5A;
+    animation: 10s cortinaRosa infinite;
+}
+
+.p-blue{
+    background-color: #070491;
+    width: 50%;
+}
+
+.p-pink{
+    width: 50%;
+}
+
+.blue{
+    width: 50%;
+    border-radius: 0 15px 15px 0;
+    background-color: #317FBF;
+    animation: 12s cortinaAzul infinite;
+}
+
+.down{
+    display: none !important;
+}
+
+.up{
+    display: block;
+}
+
+.op-0{
+    opacity: 0;
+}
+
+.imagenP{
+    width: 100%; /* O ajusta a otro valor según sea necesario */
+    height: 100%;
+    object-fit: cover; /* Ajusta cómo se escala la imagen */
+    transition: all .2s ease-in;
+}
+
+.img{
+    position: fixed;
+    width: 23em;
+    height: 23em;
+    margin: auto;
+    top: 0;
+    left: 50px;
+    bottom: 0;
+    border-radius: 100%;
+    overflow: hidden; /* Asegura que la imagen no se salga del contenedor */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* animation: foto 5s infinite; */
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    margin: 0 !important;
+}
+
+
+#connection-status {
+    display: none;
+    background-color: rgb(228, 70, 70);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.des{
+    margin-top: 1em;
+    font-size: 50px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.info{
+    margin-top: 1em;
+    font-size: 35px;
+    display: flex;
+    gap: 15px;
+    font-weight: 600;
+}
+
+.precio{
+    margin: .4em;
+    font-size: 110px;
+    font-weight: 900;
+}
+
+.flecha{
+    animation: salto 1.8s infinite;
+}
+
+/* ANIMACIONES */
+
+@keyframes cortinaRosa {
+    0% {
+        width: 50%;
+    }
+
+    30% {
+        width: 60%;
+    }
+
+    50% {
+        width: 50%;
+    }
+    
+    80% {
+        width: 70%;
+    }
+
+    100% {
+        width: 50%;
+    }
+}
+
+@keyframes cortinaAzul {
+    0% {
+        width: 50%;
+        transform: translateX(0px);
+    }
+
+    30% {
+        width: 60%;
+        transform: translateX(-20px);
+    }
+
+    50% {
+        width: 50%;
+        transform: translateX(0px);
+    }
+    
+    75% {
+        width: 70%;
+        transform: translateX(-10px);
+    }
+
+    100% {
+        width: 50%;
+        transform: translateX(0px);
+    }
+}
+
+@keyframes salto {
+    0%{
+        transform: translateY(-5px);
+    }
+    50%{
+        transform: translateY(30px);
+    }
+    100%{
+        transform: translateY(-5px);
+    }
+}
+
+/* @keyframes foto {
+    20% {
+        transform: rotateZ(20deg);
+    }
+    30% {
+        transform: rotateZ(15deg);
+    }
+    40% {
+        transform: rotateZ(20deg);
+    }
+
+    70% {
+        transform: rotateZ(-20deg);
+    }
+    80% {
+        transform: rotateZ(-15deg);
+    }
+    90% {
+        transform: rotateZ(-20deg);
+    }
+} */
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #317FBF;
+    border-radius: 10px; 
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #BA0F5A;
+    border-radius: 10px;     
+  }
