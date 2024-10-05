@@ -6,6 +6,7 @@ from src.db import session, engine
 import pandas as pd
 import numpy as np
 import os
+import shutil
 controllerReferencia = Blueprint('controllerReferencia', __name__)
 
 @controllerReferencia.route('/', methods=['GET'])
@@ -117,7 +118,8 @@ def editarPrecio(ref):
 
 ruta_carpeta = r'\\Server\sciadatec'
 ruta_carpeta_compartida = r'\\10.0.0.96\Compartida\PlanoPreciosLP'
-
+ruta_original = os.path.join(ruta_carpeta_compartida,'LPL.txt')
+ruta_copia = os.path.join(ruta_carpeta_compartida,'LPL-copia.txt')
 
 def read_csv_with_encoding(filepath):
     encodings = ['utf-8', 'ISO-8859-1', 'latin1']
@@ -149,6 +151,8 @@ def getIva(tipoIva):
 @controllerReferencia.route('/process_files', methods=['POST'])
 def process_files():
     try:
+        shutil.copy(ruta_original, ruta_copia)
+        print(f"Copia del directorio realizada correctamente: {ruta_copia}")
         ruta_listas_precios = os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')
         ruta_kardex = os.path.join(ruta_carpeta, 'AdatecKardex.txt')
         ruta_imagenes = os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')
