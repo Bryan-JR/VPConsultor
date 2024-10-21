@@ -101,11 +101,13 @@ def editarPrecio(ref):
         descripcion = datos.get('descripcion')
         precioxmayor = datos.get('precioxmayor')
         precioxunidad = datos.get('precioxunidad')
+        descuento = datos.get('descuento')
         referencia = session.query(Referencia).get(ref)
         refOld = referencia.as_dict()
         referencia.DESCRIPCION = descripcion
         referencia.PRECIOXMAYOR = precioxmayor
         referencia.PRECIOXUNIDAD = precioxunidad
+        referencia.DESCUENTO = descuento
         refNew = referencia.as_dict()
         session.commit()
         return [refOld, refNew]

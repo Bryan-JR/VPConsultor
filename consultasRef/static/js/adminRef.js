@@ -45,10 +45,12 @@ function editarPrecio(ref) {
     let des = document.getElementById('des-'+ref).value;
     let pxm = parseInt(document.getElementById('pxm-'+ref).value.replace(/\D/g, ''));
     let pxu = parseInt(document.getElementById('pxu-'+ref).value.replace(/\D/g, ''));
+    let dsto = parseInt(document.getElementById('dsto-'+ref).value.replace(/\D/g, ''));
     let precios = {
         "descripcion": des,
         "precioxmayor": pxm,
-        "precioxunidad": pxu
+        "precioxunidad": pxu,
+        "descuento": dsto
     };
     Swal.fire({
         title: `¿Seguro de actualizar la referencia ${ref}?`,
@@ -99,6 +101,11 @@ function listarProductos(lista) {
                 <td class="px-6 py-4">
                     <div>
                         <input type="text" id="pxu-${ref.referencia}" onkeyup="formato(event)" value="${formatearMoneda(ref.precioxunidad)}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="$ 0" required />
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <div>
+                        <input type="number" id="dsto-${ref.referencia}" value="${ref.descuento}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="$ 0" required />
                     </div>
                 </td>
                 <td class="px-6 py-4">

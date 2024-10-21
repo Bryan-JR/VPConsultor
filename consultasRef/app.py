@@ -1,5 +1,7 @@
 from flask import Flask
 from src.db import engine, Base
+from waitress import serve
+import ssl
 from src.controllers.controllerReferencia import controllerReferencia
 from src.controllers.controllerArchivo import controllerArchivo
 
@@ -26,7 +28,14 @@ def oculta_precio(valor):
 def oculta(valor):
     return oculta_precio(valor)
 
+certfile = 'cert.pem'  
+keyfile = 'key.pem'   
+
+context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+context.load_cert_chain(certfile=certfile, keyfile=keyfile)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False, ssl_context=('cert.pem', 'key.pem')) 
+    app.run(host='0.0.0.0', port=5000, debug=False, ssl_context=context) 
+    
+    #serve(app, host='0.0.0.0', port=8000)
 
