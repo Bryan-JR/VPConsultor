@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, render_template, send_from_direct
 from src.models.Referencias import Referencia
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import or_, text
-from src.db import session, engine
+from src.db import Session, engine
 import pandas as pd
 import numpy as np
 import os
@@ -11,18 +11,23 @@ controllerReferencia = Blueprint('controllerReferencia', __name__)
 
 @controllerReferencia.route('/', methods=['GET'])
 def inicio():
-    start = request.args.get('i', 0, type=int)
-    end = request.args.get('f', 10, type=int)
-    
-    refs = session.query(Referencia).order_by(Referencia.REFERENCIA).offset(start).limit((end-start)).all()
+    try:
+        start = request.args.get('i', 0, type=int)
+        end = request.args.get('f', 10, type=int)
+        session = Session()
+        refs = session.query(Referencia).order_by(Referencia.REFERENCIA).offset(start).limit((end-start)).all()
 
-    count = session.query(Referencia).count()
-    info = {
-        'start': start,
-        'end': end,
-        'count': count
-    }
-    return render_template("index.html", referencias=refs, info=info)
+        count = session.query(Referencia).count()
+        info = {
+            'start': start,
+            'end': end,
+            'count': count
+        }
+        return render_template("index.html", referencias=refs, info=info)
+    except Exception as e:
+        print(e)
+    finally:
+        session.close()
 
 @controllerReferencia.route('/static/img/ProductosRaiz/<path:filename>')
 def serve_image(filename):
@@ -36,11 +41,14 @@ def serve_image(filename):
 @controllerReferencia.route('/buscar/<cod>', methods=['GET'])
 def buscar(cod):
     try:
+        session = Session()
         codBarras = cod
         ref = session.query(Referencia).filter_by(CODIGO_BARRAS=codBarras).first()
         return jsonify(ref.as_dict())
     except Exception as err:
         return jsonify({"error": f"Ocurrio un error: {err}"})
+    finally:
+        session.close()
 
 @controllerReferencia.route('/consultar', methods=['GET'])
 def consultar():
@@ -60,6 +68,7 @@ def getReferencia():
         ref = request.args.get('search')
         referencias = []
         if(ref!=""):
+            session = Session()
             resp = session.query(Referencia).filter(
                 or_(
                     Referencia.REFERENCIA==ref,
@@ -72,6 +81,8 @@ def getReferencia():
         return referencias
     except Exception as e:
         return jsonify({"error": f"Ocurrio un error: {e}"})
+    finally:
+        session.close()
 
 
 FILE_PATH = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASE.xlsx'
@@ -97,6 +108,7 @@ def guardar_datos():
 @controllerReferencia.route("/editar/<ref>", methods=['GET', 'POST'])
 def editarPrecio(ref):
     try:
+        session = Session()
         datos = request.get_json()
         descripcion = datos.get('descripcion')
         precioxmayor = datos.get('precioxmayor')
@@ -135,10 +147,13 @@ def read_csv_with_encoding(filepath):
 @controllerReferencia.route('/sincronizar/precios')
 def sincronizacion():
     try:
+        session = Session()
         cont = session.query(Referencia).count()
         return render_template('upload.html', contador=cont)
     except Exception as e:
         print(e)
+    finally:
+        session.close()
 
 def getIva(tipoIva):
     iva = 0
@@ -214,6 +229,7 @@ def upload_lpl():
     ruta_lpl = os.path.join(ruta_carpeta_compartida, 'LPL.txt')
 
     try:
+        session = Session()
         df = read_csv_with_encoding(ruta_lpl)
         session.query(Referencia).delete()
         session.commit()
@@ -223,7 +239,10 @@ def upload_lpl():
         return jsonify(success=True, message="LPL.txt ha cargado con exito", cont=cont), 200
     except Exception as e:
         print(e)
+        session.rollback()
         return jsonify(success=False, message="Error al cargar LPL.txt"), 500
+    finally:
+        session.close()
 
 @controllerReferencia.route('/check_files', methods=['GET'])
 def check_files():

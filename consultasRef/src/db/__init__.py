@@ -30,4 +30,3 @@ engine = create_engine(connection_string)
 
 # Crear una sesión
 Session = scoped_session(sessionmaker(bind=engine))
-session = Session()
