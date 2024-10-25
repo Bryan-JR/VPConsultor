@@ -1,5 +1,6 @@
-consultaRef/static/img/productos
-consultaRef/static/img/ProductosRaiz
+consultasRef/static/img/productos
+consultasRef/static/img/ProductosRaiz
+consultasRefTest
 
 # Ignorar archivos específicos
 *.log
