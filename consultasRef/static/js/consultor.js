@@ -24,26 +24,134 @@ async function listarProductos(){
     resultado.classList.add("hidden");
     tablaB.classList.remove('hidden');
     let filas = "";
-    lista.innerHTML = ``;
-    listaProductos.forEach((value, i) => {
-        console.log(value.img);
-        
-        filas += `
-            <tr class="bg-white border-b hover:bg-gray-50 cursor-pointer" onclick="mostrarInfo(${i})">
-                <td class="p-4">
-                    <img class="w-16 md:w-32 max-w-full max-h-full" alt="Imagen no encontrada" src="static/img/ProductosRaiz/${value.referencia}.jpg" onerror="this.onerror=null; this.src='/static/img/ProductosRaiz/noimage.jpg';">
-                </td>
-                <td class="px-6 py-4 font-semibold text-gray-900">
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">${value.descripcion}</div>
-                        <div class="font-normal text-gray-500">${value.referencia}</div>
-                    </div>
-                </td>
-            </tr>
-        `;
+    if(listaProductos.length > 1){
+        lista.innerHTML = ``;
+        listaProductos.forEach((value, i) => {
+            console.log(value.img);
+            
+            filas += `
+                <tr class="bg-white border-b hover:bg-gray-50 cursor-pointer" onclick="mostrarInfo(${i})">
+                    <td class="p-4">
+                        <img class="w-12 md:w-28 max-w-full max-h-full" alt="Imagen no encontrada" loading="lazy" src="static/img/ProductosRaiz/${value.img}" onerror="this.onerror=null; this.src='/static/img/ProductosRaiz/noimage.jpg';">
+                    </td>
+                    <td class="px-6 py-4 font-semibold text-gray-900">
+                        <div class="ps-3">
+                            <div class="text-base font-semibold">${value.descripcion}</div>
+                            <div class="font-normal text-gray-500">${value.referencia}</div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    } else if (listaProductos.length == 1) mostrarInfo(0);
+    else cartaReferencia({
+        referencia:"---",
+        descripcion: "PRODUCTO NO ENCONTRADO",
+        codBarras: "---",
+        ue: "---",
+        precioxmayor: "---",
+        precioxunidad: "---",
+        descuento: "--",
+        img: "noimage.jpg"
     });
+
     lista.innerHTML = filas;
 }
+
+function nombreBodega(id){
+    nombre = "";
+    switch (id) {
+        case 1:
+            nombre = "PRINCIPAL"
+            break;
+        case 2:
+            nombre = "ALMACEN"
+            break;
+        case 3:
+            nombre = "AVERÍAS"
+            break;
+        case 7:
+            nombre = "EVENTOS"
+            break;
+        case 10:
+            nombre = "DIRECTOS"
+            break;
+        case 20:
+            nombre = "OUTLET"
+            break;
+        default:
+            nombre = "???"
+            break;
+    }
+    return nombre;
+}
+
+const divTabla = `
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-1 text-center py-1 rounded-s-lg">
+                        BD
+                    </th>
+                    <th scope="col" class="px-1 py-1">
+                        NOMBRE
+                    </th>
+                    <th scope="col" class="px-1 py-1 text-center rounded-e-lg">
+                        DISPONIBLES
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="inv">
+                
+            </tbody>
+            <tfoot id="ttl">
+                
+            </tfoot>
+        </table>
+    </div>
+`;
+
+function getInventario(ref) {
+    document.getElementById('inv').innerHTML = "";
+    if(ref!="")
+        axios.get(`/inventario?r=${ref}`)
+        .then((value) => {
+            let resp = value.data;
+            let totalDisp = 0;
+            resp.forEach((item) => {
+                bd = [1, 2, 20];
+                if (bd.includes(item.bodega, 0)) {
+                    totalDisp += item.existencia;
+                    document.getElementById('inv').innerHTML += `
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-1 py-1 text-center font-medium text-gray-900 whitespace-nowrap" >
+                                ${item.bodega}
+                            </th>
+                            <td class="px-1 py-1 font-medium">
+                                ${nombreBodega(item.bodega)}
+                            </td>
+                            <td class="px-1 py-1 text-center font-medium">
+                                ${item.existencia}
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+            
+            document.getElementById('inv').innerHTML += `
+                <tr class="font-semibold text-gray-900 border-b">
+                    <th scope="row" class="px-1 py-1 text-base"></th>
+                    <td class="px-1 py-1 text-right">Total</td>
+                    <td class="px-1 py-1 text-center">${totalDisp}</td>
+                </tr>
+            `;
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
 
 function cartaReferencia(obj) {
     tablaB.classList.add('hidden');
@@ -53,7 +161,7 @@ function cartaReferencia(obj) {
     resultado.innerHTML = `
         <div class="flex flex-col p-4 justify-center w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" class="flex justify-center items-center">
-                <img id="img" class="p-8 rounded-t-lg" width="240" src="static/img/ProductosRaiz/${obj.referencia}.jpg" onerror="this.src='static/img/ProductosRaiz/noimage.jpg';"/>
+                <img id="img" class="p-8 rounded-t-lg" width="180" src="static/img/ProductosRaiz/${obj.img}" loading="lazy" onerror="this.src='static/img/ProductosRaiz/noimage.jpg';"/>
             </a>
             <div class="px-3 pb-3">
                 
@@ -63,29 +171,30 @@ function cartaReferencia(obj) {
                     <kbd class="px-4 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">CodBarras ${obj.codBarras}</kbd>
                     <kbd class="px-4 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg text-center">U.E ${obj.ue}</kbd>
                 </div>
+                ${divTabla}
                 <div class="flex flex-col gap-4 my-4">
-                    <div class="grid grid-cols-2">
+                    <div class="grid grid-cols-3">
                         <p class="flex flex-col col-span-1 gap-2 items-center">
                             <span class="text-sm font-bold text-gray-900 dark:text-white">Precio mayor</span>
                             <span class="text-xl font-semibold text-gray-900 dark:text-white" id="precioM">${formatearMoneda(obj.precioxmayor)}</span>
-                            <kbd class="px-4 mx-4 py-1 text-xs font-semibold text-green-800 bg-green-100 border border-green-200 rounded-lg text-center">${descuentoM}</kbd>
+                            <kbd class="px-3 mx-2 py-1 text-xs font-semibold text-green-800 bg-green-100 border border-green-200 rounded-lg text-center">${descuentoM}</kbd>
+                        </p>
+                        <p class="flex flex-col gap-2 items-center justify-start">
+                            <span class="text-sm font-bold text-gray-900">Dsto</span>
+                            <kbd class="text-xl px-4 mx-3 py-1 font-semibold text-red-900 bg-red-100 border border-red-200 rounded-lg text-center" id="ue">${obj.descuento}%</kbd>
                         </p>
                         <p class="flex flex-col col-span-1 gap-2 items-center">
                             <span class="text-sm font-bold text-gray-900 dark:text-white">Precio unidad</span>
                             <span class="text-xl font-semibold text-gray-900 dark:text-white" id="precio">${formatearMoneda(obj.precioxunidad)}</span>
-                            <kbd class="px-4 mx-4 py-1 text-xs font-semibold text-green-800 bg-green-100 border border-green-200 rounded-lg text-center">${descuento}</kbd>
+                            <kbd class="px-3 mx-2 py-1 text-xs font-semibold text-green-800 bg-green-100 border border-green-200 rounded-lg text-center">${descuento}</kbd>
                         </p>
                     </div>
-                    <p class="flex flex-col gap-2 items-center justify-center">
-                        <span class="text-sm font-bold text-gray-900">Dsto</span>
-                        <kbd class="text-xl px-4 mx-4 py-1 font-semibold text-red-900 bg-red-100 border border-red-200 rounded-lg text-center" id="ue">${obj.descuento}%</kbd>
-                    </p>
-                    
                 </div>
             </div>
             <button type="button" onclick="listarProductos()" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2 text-center me-2">VOLVER</button>
         </div>
     `;
+    if(listaProductos.length > 0) getInventario(obj.referencia);
 }
 
 function mostrarInfo(i){

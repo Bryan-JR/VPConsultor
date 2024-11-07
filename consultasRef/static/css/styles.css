@@ -30,11 +30,14 @@
     align-items: center;
     justify-content: start;
     color: #BA0F5A;
-    text-shadow: 2px 2px 2px #727272;
+    
     /* background-image: url('../img/fondo.jpg');
     background-size: cover;
     background-position: center; */
-    
+}
+
+.sombra{
+    text-shadow: 2px 2px 2px #727272;
 }
 
 .txt{
@@ -42,7 +45,7 @@
 }
 
 .logo{
-    width: 25em;
+    width: 18em;
 }
 
 
@@ -127,22 +130,19 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .des{
     margin-top: 1em;
-    font-size: 50px;
+    font-size: 40px;
     font-weight: 900;
     text-align: center;
 }
 
 .info{
-    margin-top: 1em;
     font-size: 35px;
-    display: flex;
-    gap: 15px;
     font-weight: 600;
 }
 
 .precio{
-    margin: .4em;
-    font-size: 110px;
+    margin: .2em;
+    font-size: 100px;
     font-weight: 900;
 }
 

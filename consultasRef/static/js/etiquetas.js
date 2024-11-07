@@ -37,7 +37,7 @@ buscador.addEventListener('keyup',() => {
                 if (refs.length>0) {
                     listarProductos(refs);
                 } else {
-                    msgTabla(tabBody, 'Producto no encontrado.')
+                    msgTabla(tabBody, 'Producto no encontrado.') 
                 }
             }).catch((err) => {
                 msgTabla(tabBody, 'Producto no encontrado.')

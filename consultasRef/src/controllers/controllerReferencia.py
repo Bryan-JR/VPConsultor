@@ -16,7 +16,6 @@ def inicio():
         end = request.args.get('f', 10, type=int)
         session = Session()
         refs = session.query(Referencia).order_by(Referencia.REFERENCIA).offset(start).limit((end-start)).all()
-
         count = session.query(Referencia).count()
         info = {
             'start': start,
@@ -75,7 +74,7 @@ def getReferencia():
                     Referencia.DESCRIPCION.like(f'%{ref.upper()}%'),
                     Referencia.CODIGO_BARRAS.like(f'%{ref.upper()}%')
                 )
-            ).limit(15).all()
+            ).limit(20).all()
             referencias = [ ref.as_dict() for ref in resp]
         return referencias
     except Exception as e:
@@ -149,7 +148,12 @@ def sincronizacion():
     try:
         session = Session()
         cont = session.query(Referencia).count()
-        return render_template('upload.html', contador=cont)
+        ultimoCargue = session.execute(text('''
+                                           SELECT TOP(2) * FROM AuditoriaCargueReferencias ORDER BY FECHA DESC
+                                         ''')).fetchall()
+
+    # Imprimir los valores específicos de la fila
+        return render_template('upload.html', contador=cont, ultimoCargue=ultimoCargue)
     except Exception as e:
         print(e)
     finally:
@@ -216,13 +220,35 @@ def process_files():
         resultado = resultado.merge(precios_01, on='REFERENCIA', how='left')
 
         imagenes.set_index('REFERENCIA', inplace=True)
-        resultado['IMAGEN'] = resultado['REFERENCIA'].map(imagenes['IMAGEN']).fillna('noimage.png')
+        resultado['IMAGEN'] = resultado['REFERENCIA'].map(imagenes['IMAGEN']).fillna('noimage.jpg')
 
         resultado.to_csv(ruta_salida, index=False, sep=',')
 
         return jsonify(success=True,message="LPL.txt se genero con exito"), 200
     except Exception as e:
         return jsonify(success=False, message="No se genero con exito LPL.txt"), 500
+
+
+def actualizarImg():
+    carpeta_imagenes = 'C:/Proyectos/consultasRef/static/img/ProductosRaiz/'
+
+    session = Session()
+
+    referencias = session.query(Referencia).all()
+
+    for ref in referencias:
+        ruta_imagen = os.path.join(carpeta_imagenes, f"{ref.REFERENCIA}.jpg")
+        
+        if os.path.isfile(ruta_imagen):
+            ref.IMAGEN = f"{ref.REFERENCIA}.jpg"
+        else:
+            ref.IMAGEN = "noimage.jpg"
+        
+        session.add(ref)
+
+    session.commit()
+    session.close()
+
 
 @controllerReferencia.route('/upload_lpl', methods=['POST'])
 def upload_lpl():
@@ -235,8 +261,16 @@ def upload_lpl():
         session.commit()
         
         df.to_sql('ListaPreciosLectores', con=engine, if_exists='append', index=False)
+        ultimoCargue = session.execute(text('''
+                                           SELECT TOP(2) * FROM AuditoriaCargueReferencias ORDER BY FECHA DESC
+                                         ''')).fetchall()
+        infoCargue = {
+            "ultMod": ultimoCargue[0][2],
+            "ultCant": ultimoCargue[1][1]
+        }
         cont = session.query(Referencia).count()
-        return jsonify(success=True, message="LPL.txt ha cargado con exito", cont=cont), 200
+        actualizarImg()
+        return jsonify(success=True, message="LPL.txt ha cargado con exito", cont=cont, ultimoCargue=infoCargue), 200
     except Exception as e:
         print(e)
         session.rollback()

@@ -15,6 +15,25 @@ h1 {
     border-bottom: 2px solid #317FBF;
 }  
 
+.Ufecha {
+    font-size: 12px;
+    color: #555; 
+    background-color: #f9f9f9;
+    border: 1px solid #ddd; /* Borde delgado */
+    padding: 8px;
+    border-radius: 5px; /* Bordes redondeados */
+    margin-top: 10px; 
+    max-width: 500px; /* Ancho máximo */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para un efecto de profundidad */
+
+    }
+
+.Ufecha i {
+    color: #007bff; /* Cambia el color del ícono */
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+    font-size: 16px; /* Tamaño del ícono */
+}
+
 .logoB {
     display: block;
     margin-left: auto;
@@ -23,8 +42,8 @@ h1 {
     height: auto; /* Mantiene la proporción del logo */
 }
 
-.container {
-    max-width: 800px;
+.contenedor {
+    width: 60%;
     margin: 0 auto;
     padding: 20px;
     background: #fff;

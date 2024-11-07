@@ -1,14 +1,16 @@
-from flask import Flask
+from flask import Flask, send_from_directory, make_response
 from src.db import engine, Base
 from waitress import serve
 import ssl
 from src.controllers.controllerReferencia import controllerReferencia
 from src.controllers.controllerArchivo import controllerArchivo
+from src.controllers.controllerInventario import controllerInventario
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'plasdecor'
 app.register_blueprint(controllerReferencia)
 app.register_blueprint(controllerArchivo)
+app.register_blueprint(controllerInventario)
 
 def formatear_moneda(valor):
     formato = "{:,.0f}".format(valor)
@@ -19,7 +21,26 @@ def formatear_moneda(valor):
 @app.template_filter('moneda')
 def moneda_colombiana_filter(valor):
     return formatear_moneda(valor)
+
+@app.route('/static/img/<path:filename>')
+def serve_image(filename):
+    response = make_response(send_from_directory('static/img', filename))
+    response.headers['Cache-Control'] = 'public, max-age=31536000'  # 1 año
+    return response
     
+@app.template_filter('fecha')
+def formatear_fecha(fecha):
+    # Diccionario para traducir los meses al idioma deseado
+    meses = {
+        1: "Ene", 2: "Feb", 3: "Mar", 4: "Abr", 5: "May", 6: "Jun",
+        7: "Jul", 8: "Ago", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dic"
+    }
+    dia = fecha.day
+    mes = meses[fecha.month]
+    anio = fecha.year
+    hora = fecha.strftime("%I:%M %p")
+    return f"{dia} de {mes} del {anio} a las {hora}"
+
 def oculta_precio(valor):
     valorInv = f"{valor}"[::-1]
     return f"{valorInv[:2]}1P{valorInv[2:]}0P"

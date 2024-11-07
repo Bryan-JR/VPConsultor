@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lectores</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
 </head>
 <body>
@@ -20,18 +22,41 @@
                 <img id="imagenP" class="imagenP op-0" onerror="this.onerror=null; this.src='/static/img/ProductosRaiz/noimage.jpg';" src="" alt="">
             </div>
         </section>
-        <section class="der">
-            <img class="logo" src="{{ url_for('static', filename='img/Logo.png') }}" alt="">
-            <div id="descripcion" class="des">CONSULTA EL PRECIO AQUÍ</div>
-            <div id="precio" class="precio flecha">
+        <section class="der flex justify-center items-center">
+            <img class="logo flex justify-center items-center" src="{{ url_for('static', filename='img/Logo.png') }}" alt="">
+            <div id="descripcion" class="des flex justify-center items-center sombra">CONSULTA EL PRECIO AQUÍ</div>
+            <div id="precio" class="precio flecha flex justify-end items-center sombra">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="300px" height="300px" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 14-4-4m4 4 4-4"/>
                 </svg> 
             </div>
-            <div id="info" class="info down">
-                <p>CÓDIGO: <span id="codigo" class="txt"></span></p>
-                <p>P.L.U.: <span id="precioculto" class="txt"></span></p>
-                <p>U.E.: <span id="ue" class="txt"></span></p>
+            <div class="grid grid-cols-2 px-3 sombra mx-auto w-11/12 gap-2">
+                <div id="info" class="info flex flex-col gap-4 items-start justify-center down">
+                    <p>CÓDIGO: <span id="codigo" class="txt"></span></p>
+                    <p>P.L.U.: <span id="precioculto" class="txt"></span></p>
+                    <p>U.E.: <span id="ue" class="txt"></span></p>
+                </div>
+                <div id="tabInv" style="text-shadow: none;" class="hidden flex flex-col rounded-lg w-80 drop-shadow-md shadow-blue-300 relative items-center justify-center overflow-x-auto">
+                    <h4 class="font-bold font-sx">Inventario Actual</h4>
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
+                            <tr>
+                                <th scope="col" class="px-1 text-center py-1 rounded-s-lg">
+                                    BD
+                                </th>
+                                <th scope="col" class="px-1 py-1">
+                                    NOMBRE
+                                </th>
+                                <th scope="col" class="px-1 py-1 text-center rounded-e-lg">
+                                    DISPONIBLES
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="inv">
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
         </section>
         <input id="codBarras" type="text" name="codBarras" autocomplete="off" style="opacity: 0; position: absolute; left: 0; z-index: 0;">

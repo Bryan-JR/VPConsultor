@@ -97,6 +97,25 @@ async function checkFiles() {
         });
 }
 
+function fechaCargue() {
+    // Array para traducir los meses al idioma deseado
+    const meses = [
+        "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+    ];
+
+    fecha = new Date();
+    console.log(fecha.toLocaleString());
+    
+    const dia = fecha.getDate();
+    const mes = meses[fecha.getMonth()];
+    const anio = fecha.getFullYear();
+    const opciones = { hour: 'numeric', minute: 'numeric', hour12: true };
+    const hora = fecha.toLocaleTimeString('en-US', opciones);
+
+    return `${dia} de ${mes} del ${anio} a las ${hora}`;
+}
+
 // Función para enviar el archivo LPL con SweetAlert2
 async function uploadLPL(event) {
     event.preventDefault(); // Evita la recarga de la página
@@ -120,7 +139,12 @@ async function uploadLPL(event) {
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
+            console.log(data);
+            console.log(data.cont);
+            console.log(data.ultimoCargue);
             document.getElementById("cont").innerText = data.cont;
+            document.getElementById("ultMod").innerText = fechaCargue();
+            document.getElementById("ultCant").innerText = data.ultimoCargue.ultCant;
         } else {
             await Swal.fire({
                 title: 'Error',
@@ -135,10 +159,11 @@ async function uploadLPL(event) {
         hideLoading(); // Ocultar el indicador de carga
         await Swal.fire({
             title: 'Error',
-            text: 'Hubo un problema al cargar el archivo LPL',
+            text: 'Hubo un problema: ' + error,
             icon: 'error',
             confirmButtonText: 'OK'
         });
+        console.log(error);
     });
 }
 
