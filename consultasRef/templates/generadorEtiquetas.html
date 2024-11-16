@@ -45,7 +45,7 @@
         </div>
        <div style="height: 25em;" class="flex bg-white shadow-md rounded">
         <div class="relative w-full shadow-md overflow-x-auto sm:rounded-lg" >
-            <div class="fixed flex items-center bg-white p-2 w-full  overflow-x-auto overflow-y-auto justify-between flex-column md:flex-row flex-wrap mb-4">
+            <div class="fixed flex items-center bg-white p-2 gap-4 w-full  overflow-x-auto overflow-y-auto justify-start flex-column md:flex-row flex-wrap mb-4">
                 <label for="table-search" class="sr-only">Buscar</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -55,6 +55,10 @@
                     </div>
                     <input type="text" id="busqRef" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar referencia">
                 </div>
+                <select id="tab" class="block p-2 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="precios">PRECIOS VP</option>
+                    <option value="pulguero">PULGUERO</option>
+                </select>
             </div>
             <table style="margin-top: 4em;" class="w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">

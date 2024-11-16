@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template, send_from_directory
 from src.models.Referencias import Referencia
+from src.models.ReferenciasPulguero import ReferenciasPulguero
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import or_, text
 from src.db import Session, engine
@@ -64,15 +65,21 @@ def scan():
 def getReferencia():
     try:
         ref = request.args.get('search')
+        tab = request.args.get('table')
         referencias = []
         if(ref!=""):
+            db = Referencia
+            if (tab=="pulguero"):
+                db = ReferenciasPulguero
+            else:
+                db = Referencia
             session = Session()
-            resp = session.query(Referencia).filter(
+            resp = session.query(db).filter(
                 or_(
-                    Referencia.REFERENCIA==ref,
-                    Referencia.REFERENCIA.like(f'%{ref.upper()}%'),
-                    Referencia.DESCRIPCION.like(f'%{ref.upper()}%'),
-                    Referencia.CODIGO_BARRAS.like(f'%{ref.upper()}%')
+                    db.REFERENCIA==ref,
+                    db.REFERENCIA.like(f'%{ref.upper()}%'),
+                    db.DESCRIPCION.like(f'%{ref.upper()}%'),
+                    db.CODIGO_BARRAS.like(f'%{ref.upper()}%')
                 )
             ).limit(20).all()
             referencias = [ ref.as_dict() for ref in resp]
@@ -85,6 +92,7 @@ def getReferencia():
 
 
 FILE_PATH = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASE.xlsx'
+FILE_PATH_pulguero = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASE_pulguero.xlsx'
 FILE_PATH_DSTO = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASEDESCUENTOS.xlsx'
 @controllerReferencia.route("/guardarLista", methods=["POST"])
 def guardar_datos():
@@ -99,6 +107,22 @@ def guardar_datos():
             df1.to_excel(writer, index=False)
         with pd.ExcelWriter(FILE_PATH_DSTO) as writer:
             df2.to_excel(writer, index=False)
+        return jsonify({'message': 'Datos reescritos correctamente'}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'error': str(e)}), 500
+    
+@controllerReferencia.route("/guardarPulguero", methods=["POST"])
+def guardar_pulguero():
+    try:
+        data = request.get_json()
+        datosBASE = data
+        datosDsto = data     
+        df1 = pd.DataFrame(datosBASE)
+        df1 = df1.drop(columns=['descuento', 'precioDsto'])
+        df2 = pd.DataFrame(datosDsto)
+        with pd.ExcelWriter(FILE_PATH_pulguero) as writer:
+            df1.to_excel(writer, index=False)
         return jsonify({'message': 'Datos reescritos correctamente'}), 200
     except Exception as e:
         print(e)
@@ -228,6 +252,65 @@ def process_files():
     except Exception as e:
         return jsonify(success=False, message="No se genero con exito LPL.txt"), 500
 
+@controllerReferencia.route('/process_pulguero', methods=['POST'])
+def process_pulguero():
+    try:
+        shutil.copy(ruta_original, ruta_copia)
+        print(f"Copia del directorio realizada correctamente: {ruta_copia}")
+        ruta_listas_precios = os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')
+        ruta_kardex = os.path.join(ruta_carpeta_compartida, 'kardex_pulguero.txt')
+        ruta_imagenes = os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')
+        ruta_salida = os.path.join(ruta_carpeta_compartida, 'LPL_pulguero.txt')
+
+        listas_precios = read_csv_with_encoding(ruta_listas_precios)
+        kardex = read_csv_with_encoding(ruta_kardex)
+        imagenes = read_csv_with_encoding(ruta_imagenes)
+        print("Cantidad en Kardex: ",len(kardex))
+
+        listas_precios_bodega_02 = listas_precios[listas_precios['BODEGA'] == 7]
+        kardex_bodega_02 = kardex[kardex['BODEGA'] == 7]
+
+
+        kardex_activos = kardex_bodega_02[kardex_bodega_02['ESTADO ARTICULO'].isna() | (kardex_bodega_02['ESTADO ARTICULO'] == '')]
+        print("Cantidad 07: ", len(kardex_bodega_02))
+        print("Cantidad 07 Activos: ", len(kardex_activos))
+
+        kardex_activos = kardex_activos[['BODEGA', 'REFERENCIA', 'DESCRIPCION', 'CODIGO BARRAS', 'UNIDAD', 'PRECIO VENTA', 'TIPO IVA', 'DCTO VENTA']]
+
+
+        kardex_activos['CODIGO BARRAS'] = kardex_activos.apply(
+        lambda row: '20200' + row['REFERENCIA'] if pd.isna(row['CODIGO BARRAS']) or row['CODIGO BARRAS'] == '' else row['CODIGO BARRAS'], 
+        axis=1
+        )
+
+        
+        conditions = [
+        (kardex_activos['TIPO IVA'].between(41, 46)) | (kardex_activos['TIPO IVA'].between(48, 54)),
+        (kardex_activos['TIPO IVA'].isin([39, 47, 55, 56])),
+        (kardex_activos['TIPO IVA'].isin([98, 99])),
+        ]
+
+
+        values = [1.19, 1.05, 1]
+        kardex_activos['PRECIOXMAYOR'] = (kardex_activos['PRECIO VENTA'] * np.select(conditions, values, default=1)).round(0).astype(int)
+
+        precios_01 = listas_precios_bodega_02[listas_precios_bodega_02['CODIGO LISTA DE PREC'] == 6][['REFERENCIA', 'PRECIO CON IVA']]
+        precios_01 = precios_01.rename(columns={'PRECIO CON IVA': 'PRECIOXUNIDAD'})
+        precios_01['PRECIOXUNIDAD'] = precios_01['PRECIOXUNIDAD'].fillna(0).round(0).astype(int)
+
+        kardex_activos = kardex_activos.rename(columns={'CODIGO BARRAS': 'CODIGO_BARRAS', 'DCTO VENTA': 'DESCUENTO'})
+        resultado = kardex_activos[['REFERENCIA', 'BODEGA', 'DESCRIPCION', 'CODIGO_BARRAS', 'UNIDAD', 'PRECIOXMAYOR', 'DESCUENTO']]
+        resultado = resultado.merge(precios_01, on='REFERENCIA', how='left')
+
+        imagenes.set_index('REFERENCIA', inplace=True)
+        resultado['IMAGEN'] = resultado['REFERENCIA'].map(imagenes['IMAGEN']).fillna('noimage.jpg')
+
+        resultado.to_csv(ruta_salida, index=False, sep=',')
+
+        return jsonify(success=True,message="LPL_pulguero.txt se genero con exito"), 200
+    except Exception as e:
+        print(e)
+        return jsonify(success=False, message="No se genero con exito LPL_pulguero.txt"), 500
 
 def actualizarImg():
     carpeta_imagenes = 'C:/Proyectos/consultasRef/static/img/ProductosRaiz/'
@@ -250,7 +333,7 @@ def actualizarImg():
     session.close()
 
 
-@controllerReferencia.route('/upload_lpl', methods=['POST'])
+@controllerReferencia.route('/upload_lpl', methods=['GET'])
 def upload_lpl():
     ruta_lpl = os.path.join(ruta_carpeta_compartida, 'LPL.txt')
 
@@ -277,12 +360,41 @@ def upload_lpl():
         return jsonify(success=False, message="Error al cargar LPL.txt"), 500
     finally:
         session.close()
+        
+        
+@controllerReferencia.route('/upload_pulguero', methods=['GET'])
+def upload_lpl_pulguero():
+    ruta_lpl = os.path.join(ruta_carpeta_compartida, 'LPL_pulguero.txt')
+
+    try:
+        session = Session()
+        df = read_csv_with_encoding(ruta_lpl)
+        session.query(ReferenciasPulguero).delete()
+        session.commit()
+        
+        df.to_sql('ListaPreciosPulguero', con=engine, if_exists='append', index=False)
+        ultimoCargue = session.execute(text('''
+                                           SELECT TOP(2) * FROM AuditoriaCargueReferencias ORDER BY FECHA DESC
+                                         ''')).fetchall()
+        infoCargue = {
+            "ultMod": ultimoCargue[0][2],
+            "ultCant": ultimoCargue[1][1]
+        }
+        cont = session.query(ReferenciasPulguero).count()
+        actualizarImg()
+        return jsonify(success=True, message="LPL_pulguero.txt ha cargado con exito", cont=cont, ultimoCargue=infoCargue), 200
+    except Exception as e:
+        print(e)
+        session.rollback()
+        return jsonify(success=False, message="Error al cargar LPL_pulguero.txt"), 500
+    finally:
+        session.close()
 
 @controllerReferencia.route('/check_files', methods=['GET'])
 def check_files():
     archivos = {
-        'AdatecListaPrecios.txt': os.path.isfile(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')),
-        'AdatecKardex.txt': os.path.isfile(os.path.join(ruta_carpeta, 'AdatecKardex.txt')),
-        'Imagenes.txt': os.path.isfile(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt'))
+        'AdatecListaPrecios.txt': (os.path.isfile(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')), os.path.getsize(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt'))),
+        'AdatecKardex.txt': (os.path.isfile(os.path.join(ruta_carpeta, 'AdatecKardex.txt')), os.path.getsize(os.path.join(ruta_carpeta, 'AdatecKardex.txt'))),
+        'Imagenes.txt': (os.path.isfile(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')), os.path.getsize(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')))
     }
     return jsonify(archivos), 200

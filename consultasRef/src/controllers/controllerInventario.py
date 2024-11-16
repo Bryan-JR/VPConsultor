@@ -65,12 +65,16 @@ def actualizarInv():
     if(hora_inicio <= hora_actual <= hora_fin):
         try:
             inv = os.path.join(ruta, "Inventario.txt")
-            tam = os.path.getsize(r'\\10.0.0.100\serveriltda\Iltda\Soporte Compartida\Inventario.txt')
+            #tam = os.path.getsize(r'\\10.0.0.100\serveriltda\Iltda\Soporte Compartida\Inventario.txt')
             init = False
-            if tam > 2489999:
+            df = datos(inv)
+            NaN_ref = df['REFERENCIA'].isna().any()
+            NaN_lin = df['LINEA'].isna().any()
+            NaN_bd = df['BODEGA'].isna().any()
+            NaN_exi = df['EXISTENCIA'].isna().any()
+            if not NaN_ref and not NaN_bd and not NaN_lin and not NaN_exi:
                 session = Session()
                 init = True
-                df = datos(inv)
                 # Traer todos los registros existentes de la base de datos
                 inventarios_existentes = session.query(Inventario).all()
                 inventario_dict = {(inv.REFERENCIA, inv.BODEGA): inv for inv in inventarios_existentes}
@@ -153,5 +157,5 @@ def inventarios():
 
 #actualizarInv()
 scheduler = BackgroundScheduler()
-scheduler.add_job(actualizarInv, 'interval', minutes=1)
+scheduler.add_job(actualizarInv, 'interval', seconds=30)
 scheduler.start()

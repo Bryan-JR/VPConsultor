@@ -16,14 +16,14 @@
         <img src="{{ url_for('static', filename='img/logoB.png') }}" alt="LogoB" class="logoB">
         <h1>Proceso & Carga de Archivos Lectores</h1>
         <div>
-            <p Class="Ufecha" id="Ufecha"><i class="fas fa-info-circle"></i>  Ultima modificación: <strong id="ultMod">{{ ultimoCargue[0][2] | fecha }}</strong> - Cantidad anterior: <strong id="ultCant">{{ultimoCargue[1][1]}}</strong></p>
+            <p Class="Ufecha" id="Ufecha"><i class="fas fa-info-circle"></i>  Ultima sincronización: <strong id="ultMod">{{ ultimoCargue[0][2] | fecha }}</strong> - Cantidad anterior: <strong id="ultCant">{{ultimoCargue[1][1]}}</strong></p>
         </div>
         <div id="file-status"></div>
-        
         <!-- Formulario para cargar archivo LPL -->
-        <form id="upload-lpl-form" onsubmit="uploadLPL(event)" enctype="multipart/form-data">
-            <button type="submit" class="secondary">Sincronizar precios</button>
-        </form>
+        <button type="button" onclick="processFiles()">GENERAR LISTA</button>
+        <button type="button" class="secondary" onclick="uploadLPL(event)">SINCRONIZAR PRECIOS</button>
+        <button type="button" onclick="processFilesPulguero()">GENERAR LISTA PULGUERO</button>
+        <button type="button" class="secondary" onclick="uploadLPL_pulguero(event)">SINCRONIZAR PRECIOS</button>
         <div>
             Hay <strong id="cont">{{ contador }}</strong> productos registrados.
         </div>
