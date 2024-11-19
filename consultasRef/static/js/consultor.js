@@ -168,7 +168,7 @@ async function cartaReferencia(obj) {
     resultado.innerHTML = `
         <div class="flex flex-col p-4 justify-center w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#" class="flex justify-center items-center">
-                <img id="img" class="p-8 rounded-t-lg" width="180" src="static/img/ProductosRaiz/${obj.img}" loading="lazy" onerror="this.src='static/img/ProductosRaiz/noimage.jpg';"/>
+                <img id="img" class="p-8" width="180" src="static/img/ProductosRaiz/${obj.img}" loading="lazy" onerror="this.src='static/img/ProductosRaiz/noimage.jpg';"/>
             </a>
             <div class="px-3 pb-3">
                 
@@ -209,8 +209,8 @@ async function mostrarInfo(i){
     await cartaReferencia(obj);
 }
 
+let refresco;
 buscaRef.addEventListener('keyup', () => {
-    clearTimeout(reposo);
     lista.innerHTML = `
             <tr class="flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50 overflow-none">
                 <td class="py-2 px-4">
@@ -221,13 +221,14 @@ buscaRef.addEventListener('keyup', () => {
                 </td>
             </tr>
         `;
+    clearTimeout(refresco);
     let ref = buscaRef.value;
     if(ref!=""){
-        setTimeout(async() => {
+        refresco = setTimeout(async() => {
             await axios.get('/buscador?search='+ref)
             .then( async resp => {
                 listaProductos = await resp.data;
-                listarProductos();
+                await listarProductos();
             })
             .catch(err =>{
                 resultado.innerHTML = err;

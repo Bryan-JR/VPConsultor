@@ -15,11 +15,39 @@
  <div class="p-4">
     <div class="">
         <div class="grid grid-cols-3 gap-4 mb-4">
-            <div style="height: 10em; flex-direction: column;" class="flex col-span-1 items-center gap-6 py-4 rounded">
-                <img src="/static/img/Logo.png" class="mx-auto mb-2 w-48 " alt="PLASDECOR Logo" />
-                <h2 class="text-2xl justify-center text-center font-semibold">GENERADOR DE ETIQUETAS</h2>
-                <div>
-                    <button type="button" onclick="mandarLista();" class="text-white font-bold bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">ASIGNAR ETIQUETAS</button>
+            
+            <div style="height: 11em; flex-direction: column;" class="flex col-span-1 items-center gap-2 py-4 rounded">
+                <img src="/static/img/Logo.png" class="mx-auto w-48 " alt="PLASDECOR Logo" />
+                <h2 class="justify-center text-center font-bold">GENERADOR DE ETIQUETAS</h2>
+                <div class="grid grid-cols-2 gap-1">
+                    <div id="contBtn" class="flex items-center col-span-2 justify-center">
+                        <button type="button" onclick="mandarLista();" class="flex gap-2 text-white font-bold bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-2 py-2 text-center">
+                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5h7.586l-.293.293a1 1 0 0 0 1.414 1.414l2-2a1 1 0 0 0 0-1.414l-2-2a1 1 0 0 0-1.414 1.414l.293.293H4V9h5a2 2 0 0 0 2-2Z" clip-rule="evenodd"/>
+                              </svg>                              
+                            ASIGNAR
+                        </button>
+                    </div>
+                    <div id="tabInv" style="text-shadow: none;" class="hidden flex flex-col rounded-lg gap-1 drop-shadow-md shadow-blue-300 relative items-center justify-center overflow-x-none">
+                        <h4 class="font-bold text-xs font-sx">Inventario Actual <span id="refInv" class="font-bold text-red-700"></span></h4>
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
+                                <tr>
+                                    <th scope="col" class="px-1 text-center py-1 rounded-s-lg">
+                                        BD
+                                    </th>
+                                    <th scope="col" class="px-1 py-1">
+                                        NOMBRE
+                                    </th>
+                                    <th scope="col" class="px-1 py-1 text-center rounded-e-lg">
+                                        Unds.
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="inv">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div style="height: 20em;" class="shadow-md bg-white col-span-2 overflow-x-auto rounded">
@@ -57,7 +85,7 @@
                 </div>
                 <select id="tab" class="block p-2 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                     <option value="precios">PRECIOS VP</option>
-                    <option value="pulguero">PULGUERO</option>
+                    <!-- <option value="pulguero">PULGUERO</option> -->
                 </select>
             </div>
             <table style="margin-top: 4em;" class="w-full text-sm text-left rtl:text-right text-gray-500">
