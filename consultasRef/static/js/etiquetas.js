@@ -23,29 +23,30 @@ function msgTabla(tabla, txt) {
     `;
 }
 
-buscador.addEventListener('keyup',() => {
+buscador.addEventListener('keyup', async () => {
+    clearTimeout(refreco);
     if (buscador.value != "") {
         msgTabla(tabBody, `
             <div role="status">
                 <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
                 <span class="sr-only">Loading...</span>
             </div>`);
-        clearTimeout(refreco);
-        refreco = setTimeout(() => {
-            axios.get('/buscador?search='+buscador.value+'&table='+tab.value)
-            .then((result) => {
-                let refs = result.data;
-                console.log(result.data);
-                if (refs.length>0) {
-                    listarProductos(refs);
-                } else {
-                    msgTabla(tabBody, 'Producto no encontrado.') 
-                }
-            }).catch((err) => {
-                msgTabla(tabBody, 'Producto no encontrado.')
-                console.log("Ocurrio un error: \n"+ err);
-            });
-        }, 500);
+        
+        refreco = setTimeout(async () => {
+        await axios.get('/buscador?search='+buscador.value+'&table='+tab.value)
+        .then(async (result) => {
+            let refs = result.data;
+            console.log(result.data);
+            if (refs.length>0) {
+                await listarProductos(refs);
+            } else {
+                msgTabla(tabBody, 'Producto no encontrado.') 
+            }
+        }).catch((err) => {
+            msgTabla(tabBody, 'Producto no encontrado.')
+            console.log("Ocurrio un error: \n"+ err);
+        });
+       }, 500);
     }    
 })
 
@@ -156,12 +157,12 @@ function copiarCodigo(cod) {
 }
 
 
-function listarProductos(lista) {
+async function listarProductos(lista) {
     document.getElementById('tabInv').classList.add('hidden');
     document.getElementById('contBtn').classList.add('col-span-2');
 
     tabBody.innerHTML = "";
-    lista.forEach(ref => {
+    await lista.forEach(ref => {
         let cod = ref.referencia;
         let desc = ref.descripcion;
         let may = ocultaPrecio(ref.precioxmayor);
@@ -216,7 +217,7 @@ function listarProductos(lista) {
                     </div>
                 </td>
                 <td class="px-6 py-4">
-                    <a  id="btn-${cod}" style="z-index:100;" href="#" type="button" onclick="agregarRef('${desc}', '${cod}', '${may}', ${ref.codBarras}, '${pre}', '${dsto}', '${precioDsto}')" class="text-blue-700 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
+                    <a  id="btn-${cod}" style="z-index:100;" href="#" type="button" onclick="agregarRef('${desc}', '${cod}', '${may}', '${ref.codBarras}', '${pre}', '${dsto}', '${precioDsto}')" class="text-blue-700 hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd" d="M8 7V2.221a2 2 0 0 0-.5.365L3.586 6.5a2 2 0 0 0-.365.5H8Zm2 0V2h7a2 2 0 0 1 2 2v.126a5.087 5.087 0 0 0-4.74 1.368v.001l-6.642 6.642a3 3 0 0 0-.82 1.532l-.74 3.692a3 3 0 0 0 3.53 3.53l3.694-.738a3 3 0 0 0 1.532-.82L19 15.149V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Z" clip-rule="evenodd"/>
                             <path fill-rule="evenodd" d="M17.447 8.08a1.087 1.087 0 0 1 1.187.238l.002.001a1.088 1.088 0 0 1 0 1.539l-.377.377-1.54-1.542.373-.374.002-.001c.1-.102.22-.182.353-.237Zm-2.143 2.027-4.644 4.644-.385 1.924 1.925-.385 4.644-4.642-1.54-1.54Zm2.56-4.11a3.087 3.087 0 0 0-2.187.909l-6.645 6.645a1 1 0 0 0-.274.51l-.739 3.693a1 1 0 0 0 1.177 1.176l3.693-.738a1 1 0 0 0 .51-.274l6.65-6.646a3.088 3.088 0 0 0-2.185-5.275Z" clip-rule="evenodd"/>
@@ -227,6 +228,7 @@ function listarProductos(lista) {
             </tr>
         `;
     });
+    document.getElementById('contLista').scrollHeight;
 }
 
 function limpiarLista() {

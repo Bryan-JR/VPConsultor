@@ -17,7 +17,7 @@ class Referencia(Base):
         return {
             'referencia': self.REFERENCIA,
             'bodega': self.BODEGA,
-            'codBarras': self.CODIGO_BARRAS,
+            'codBarras': str(self.CODIGO_BARRAS),
             'descripcion': self.DESCRIPCION,
             'ue': self.UNIDAD,
             'precioxmayor': round(self.PRECIOXMAYOR/10)*10,

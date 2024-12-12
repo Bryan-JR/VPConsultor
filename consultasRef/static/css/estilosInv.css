@@ -1,0 +1,46 @@
+.copyright {
+    font-family: 'Arial', sans-serif; /* Cambia la fuente si lo prefieres */
+    font-size: 0.9em; /* Ajusta el tamaño de la fuente */
+    color: #666; /* Color gris oscuro para un look profesional */
+    text-align: center; /* Centra el texto */
+    margin-top: 20px; /* Espacio arriba del texto */
+    margin-bottom: 10px; /* Espacio abajo del texto */
+    font-style: italic; /* Estilo cursiva para el copyright */
+    border-top: 1px solid #ddd; /* Línea horizontal arriba del texto */
+    padding-top: 10px; /* Espacio entre la línea y el texto */
+}
+
+thead.sticky {
+    background-color: #f9fafb; /* Fondo del thead (ajusta al diseño) */
+    position: sticky;
+    top: 82px;
+}
+
+div.relative.overflow-x-auto {
+    overflow-y: auto;  /* Habilita el scroll vertical */
+}
+
+.iconos {
+    width: 24px; /* Ajusta el tamaño */
+    height: 24px; /* Ajusta el tamaño */
+    margin-right: 10px; /* Espaciado entre el ícono y el texto */
+    vertical-align: middle; /* Alineación vertical */
+}
+
+.carga{
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}

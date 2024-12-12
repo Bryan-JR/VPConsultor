@@ -20,29 +20,33 @@ function formatearMoneda(valor) {
     }
 }
 
+async function listar(lista){
+    await lista.forEach(async (value, i) => {
+        filas +=  `
+            <tr class="bg-white border-b hover:bg-gray-50 cursor-pointer" onclick="mostrarInfo(${i})">
+                <td class="p-4">
+                    <img class="w-12 md:w-28 max-w-full max-h-full" alt="Imagen no encontrada" loading="lazy" src="static/img/ProductosRaiz/${value.img}" onerror="this.onerror=null; this.src='/static/img/ProductosRaiz/noimage.jpg';">
+                </td>
+                <td class="px-6 py-4 font-semibold text-gray-900">
+                    <div class="ps-3">
+                        <div class="text-base font-semibold">${value.descripcion}</div>
+                        <div class="font-normal text-gray-500">${value.referencia}</div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+}
+
 async function listarProductos(){
     resultado.classList.add("hidden");
     tablaB.classList.remove('hidden');
     let filas = "";
-    let tam = listaProductos.length
+    let tam = listaProductos.length;
     if (tam == 1) await mostrarInfo(0);
     else if(tam > 1){
         lista.innerHTML = ``;
-        listaProductos.forEach(async (value, i) => {
-            filas +=  `
-                <tr class="bg-white border-b hover:bg-gray-50 cursor-pointer" onclick="mostrarInfo(${i})">
-                    <td class="p-4">
-                        <img class="w-12 md:w-28 max-w-full max-h-full" alt="Imagen no encontrada" loading="lazy" src="static/img/ProductosRaiz/${value.img}" onerror="this.onerror=null; this.src='/static/img/ProductosRaiz/noimage.jpg';">
-                    </td>
-                    <td class="px-6 py-4 font-semibold text-gray-900">
-                        <div class="ps-3">
-                            <div class="text-base font-semibold">${value.descripcion}</div>
-                            <div class="font-normal text-gray-500">${value.referencia}</div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+        listar(listaProductos);
         lista.innerHTML = filas;
     }
     else await cartaReferencia({
@@ -233,7 +237,7 @@ buscaRef.addEventListener('keyup', () => {
             .catch(err =>{
                 resultado.innerHTML = err;
             })
-        }, 600);
+        }, 500);
     }
 });
 

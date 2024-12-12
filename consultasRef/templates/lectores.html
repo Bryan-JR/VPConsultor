@@ -26,9 +26,7 @@
             <img class="logo flex justify-center items-center" src="{{ url_for('static', filename='img/Logo.png') }}" alt="">
             <div id="descripcion" class="des flex justify-center items-center sombra">CONSULTA EL PRECIO AQUÍ</div>
             <div id="precio" class="precio flecha flex justify-end items-center sombra">
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="300px" height="300px" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 14-4-4m4 4 4-4"/>
-                </svg> 
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="300" height="300" fill="none"><style>@keyframes flipping{0%{transform:rotate3d(1,1,0,0deg)}to{transform:rotate3d(1,1,0,180deg)}}</style><g style="animation:flipping 1.5s cubic-bezier(.96,-.2,0,1.29) both infinite alternate-reverse"><path fill="#BA0F5A" fill-rule="evenodd" d="M5.71 11.025a5.25 5.25 0 1010.5 0 5.25 5.25 0 00-10.5 0zm5.25-7a7 7 0 100 14 7 7 0 000-14z" clip-rule="evenodd"/><rect width="1.839" height="3.677" x="16.139" y="17.375" fill="#317FBF" rx=".2" transform="rotate(-45 16.14 17.375)"/></g></svg>
             </div>
             <div class="grid grid-cols-2 px-3 sombra mx-auto w-11/12 gap-2">
                 <div id="info" class="info flex flex-col gap-4 items-start justify-center down">

@@ -212,7 +212,7 @@ def process_files():
         kardex_bodega_02 = kardex[kardex['BODEGA'] == 2]
 
 
-        kardex_activos = kardex_bodega_02[kardex_bodega_02['ESTADO ARTICULO'].isna() | (kardex_bodega_02['ESTADO ARTICULO'] == '')]
+        kardex_activos = kardex_bodega_02[kardex_bodega_02['ESTADO ARTICULO'].isna() | (kardex_bodega_02['ESTADO ARTICULO'] == '') | (kardex_bodega_02['ESTADO ARTICULO'] == 0)]
         print("Cantidad 02: ", len(kardex_bodega_02))
         print("Cantidad 02 Activos: ", len(kardex_activos))
 
@@ -245,11 +245,13 @@ def process_files():
 
         imagenes.set_index('REFERENCIA', inplace=True)
         resultado['IMAGEN'] = resultado['REFERENCIA'].map(imagenes['IMAGEN']).fillna('noimage.jpg')
-
+        resultado['CODIGO_BARRAS'] = resultado['CODIGO_BARRAS'].astype(str)
+        resultado['CODIGO_BARRAS'] = resultado['CODIGO_BARRAS'].replace(r'\.0$', '', regex=True)
         resultado.to_csv(ruta_salida, index=False, sep=',')
 
         return jsonify(success=True,message="LPL.txt se genero con exito"), 200
     except Exception as e:
+        print(e)
         return jsonify(success=False, message="No se genero con exito LPL.txt"), 500
 
 @controllerReferencia.route('/process_pulguero', methods=['POST'])

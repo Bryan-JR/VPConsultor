@@ -100,32 +100,48 @@ async function getInventario(ref) {
         });
 }
 
+const imgTranparente = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+
+function pantallaCarga(){
+    imagenP.src = imgTranparente;
+    imagenP.classList.add("op-0");
+    descripcion.innerText = "BUSCANDO...";
+    precio.classList.add("flecha");
+    info.classList.add('down');
+    tabInv.classList.add('hidden');
+    precio.innerHTML =  `
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="300" height="300" fill="none"><style>@keyframes loader4{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}</style><path stroke="#BA0F5A" stroke-linecap="round" stroke-width="1.5" d="M12 6.864v1.333m0 7.606v1.333M17.136 12h-1.333m-7.606 0H6.864m8.768 3.632l-.943-.943M9.311 9.311l-.943-.943m0 7.264l.943-.943m5.378-5.378l.943-.943" style="animation:loader4 1.5s linear infinite both;transform-origin:center center"/></svg>
+    `;
+}
+
+let tiempo;
+let retorno;
+let espera;
 input.addEventListener("change", () => {
-    let tiempo;
-    let retorno;
-    clearTimeout(retorno);
+    if(retorno) clearTimeout(retorno);
+    if(espera) clearTimeout(espera);
+    pantallaCarga();
     axios.get('/buscar/'+input.value)
-    .then(async (result) => {
+    .then((result) => {
         input.value = "";
+        tiempo = 60000;
         input.focus();
         referencia = result.data;
         console.log(referencia);
         if(Object.keys(referencia)[0] === "error"){
-            tiempo = 5000;
+            tiempo = 7000;
+            imagenP.src = imgTranparente;
             imagenP.classList.add("op-0");
             descripcion.innerText = "PRODUCTO NO ENCONTRADO";
             precio.classList.add("flecha");
             info.classList.add('down');
             tabInv.classList.add('hidden');
             precio.innerHTML =  `
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="280px" height="280px"  fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                </svg>
+                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="300" height="300" fill="none"><style>@keyframes sad{0%{stroke-dashoffset:0}to{stroke-dashoffset:200}}</style><circle cx="12" cy="12" r="7" stroke="#BA0F5A" stroke-width="1.5"/><circle cx="9" cy="10.277" r="1" fill="#BA0F5A"/><circle cx="15" cy="10.277" r="1" fill="#BA0F5A"/><path stroke="#317FBF" stroke-linecap="round" d="M15 15.25l-.049-.04A4.631 4.631 0 009 15.25" style="animation:sad 4s infinite linear" stroke-dasharray="100"/></svg>
             `;
         } else {
             tiempo = 60000;
             imagenP.src = "/static/img/ProductosRaiz/" + referencia.img;
-            imagenP.classList.remove("op-0");
             descripcion.innerText = referencia.descripcion;
             precio.classList.remove("flecha");
             precio.innerText = formatearMoneda(referencia.precioxunidad);
@@ -134,25 +150,39 @@ input.addEventListener("change", () => {
             precioculto.innerText = ocultaPrecio(referencia.precioxmayor);
             ue.innerText = referencia.ue;
             tabInv.classList.remove('hidden');
-            await getInventario(referencia.referencia);
+            imagenP.classList.remove("op-0");
+            getInventario(referencia.referencia);
         }
-        retorno = setTimeout(() => {
+    }).catch((err) => {
+        console.log(err);
+        tiempo = 20000;
+        clearTimeout(espera);
+        espera = setTimeout(() => {
             input.value = "";
             input.focus();
+            imagenP.src = imgTranparente;
             imagenP.classList.add("op-0");
-            descripcion.innerText = "CONSULTA EL PRECIO AQUÍ";
+            descripcion.innerText = "TIEMPO DE ESPERA TERMINADO. INTENTELO NUEVAMENTE";
             precio.classList.add("flecha");
             tabInv.classList.add('hidden');
             precio.innerHTML =  `
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="300px" height="300px" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 14-4-4m4 4 4-4"/>
-                </svg> 
+                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="300" height="300" fill="none"><style>@keyframes rotate-center{0%{transform:rotate(0)}to{transform:rotate(360deg)}}</style><g style="animation:rotate-center 2s ease-in-out infinite both;transform-origin:center center" stroke-width="1.5"><path stroke="#BA0F5A" stroke-linecap="round" d="M15.473 8.41a5 5 0 10.939 5.952"/><path fill="#317FBF" stroke="#317FBF" d="M17.195 10.373l-2.308-.347a.065.065 0 01-.018-.005.023.023 0 01-.007-.005.056.056 0 01-.015-.024.056.056 0 01-.002-.03.03.03 0 01.002-.007.069.069 0 01.013-.015l1.995-1.964a.066.066 0 01.015-.012.027.027 0 01.007-.003.056.056 0 01.029.003c.012.004.02.01.024.015a.027.027 0 01.005.007.069.069 0 01.004.019l.313 2.312a.047.047 0 01-.002.023.053.053 0 01-.013.02.053.053 0 01-.02.012.046.046 0 01-.022.001z"/></g></svg>
             `;
             info.classList.add('down');
-        }, tiempo);
-        
-    }).catch((err) => {
-        console.log(err);        
+        }, 10000);
     });
+    retorno = setTimeout(() => {
+        input.value = "";
+        input.focus();
+        imagenP.src = imgTranparente;
+        imagenP.classList.add("op-0");
+        descripcion.innerText = "CONSULTA EL PRECIO AQUÍ";
+        precio.classList.add("flecha");
+        tabInv.classList.add('hidden');
+        precio.innerHTML =  `
+             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="300" height="300" fill="none"><style>@keyframes flipping{0%{transform:rotate3d(1,1,0,0deg)}to{transform:rotate3d(1,1,0,180deg)}}</style><g style="animation:flipping 1.5s cubic-bezier(.96,-.2,0,1.29) both infinite alternate-reverse"><path fill="#BA0F5A" fill-rule="evenodd" d="M5.71 11.025a5.25 5.25 0 1010.5 0 5.25 5.25 0 00-10.5 0zm5.25-7a7 7 0 100 14 7 7 0 000-14z" clip-rule="evenodd"/><rect width="1.839" height="3.677" x="16.139" y="17.375" fill="#317FBF" rx=".2" transform="rotate(-45 16.14 17.375)"/></g></svg>
+        `;
+        info.classList.add('down');
+    }, tiempo);
     input.value = "";
 });
