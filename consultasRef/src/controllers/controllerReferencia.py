@@ -44,10 +44,11 @@ def buscar(cod):
         session = Session()
         codBarras = cod
         ref = session.query(Referencia).filter_by(CODIGO_BARRAS=codBarras).first()
-        session.close()
         return jsonify(ref.as_dict())
     except Exception as err:
         return jsonify({"error": f"Ocurrio un error: {err}"})
+    finally:
+        session.close()
 
 @controllerReferencia.route('/consultar', methods=['GET'])
 def consultar():
@@ -81,7 +82,7 @@ def getReferencia():
                     db.DESCRIPCION.like(f'%{ref.upper()}%'),
                     db.CODIGO_BARRAS.like(f'%{ref.upper()}%')
                 )
-            ).limit(20).all()
+            ).limit(25).all()
             referencias = [ ref.as_dict() for ref in resp]
         return referencias
     except Exception as e:

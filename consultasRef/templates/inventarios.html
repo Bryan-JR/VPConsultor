@@ -11,50 +11,72 @@
 </head>
 <body class="flex flex-col justify-center items-center relative overflow-x-auto bg-white max-h-full h-full bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')]">
     <h1 class="sticky text-4xl text-center font-bold mt-6 mb-4">INVENTARIOS PLASDECOR</h1>
-    <div class="sticky top-0 flex items-center p-2 w-full bg-white overflow-x-auto overflow-y-auto flex-column md:flex-row flex-wrap mx-4">
-        <div class="searchable-select">
-            <label for="proveedores" class="block mb-2 text-sm font-medium text-gray-900">Proveedor</label>
-            <select id="proveedores" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                <option value="">Seleccionar</option>
-            </select>
-        </div>
-    </div>
-
     
-    <table class="w-screen text-sm overflow-x-auto text-left rtl:text-right text-gray-500">
-        <thead class="sticky text-xs text-gray-700 uppercase bg-gray-50">
-            <tr>
-                <th scope="col" class="w-32 px-6 py-3 text-center">Código</th>
-                <th scope="col" class="w-96 py-3 text-center overflow-hidden text-ellipsis whitespace-nowrap">Descripción</th>
-                <th scope="col" class="w-40 px-6 py-3 text-center">Fecha Compra</th>
-                <th scope="col" class="w-40 px-6 py-3 text-center">Precioxunidad</th>
-                <th scope="col" class="w-20 px-6 py-3 text-center">BD 01</th>
-                <th scope="col" class="w-20 px-6 py-3 text-center">BD 02</th>
-                <th scope="col" class="w-20 px-6 py-3 text-center">BD 20</th>
-                <th scope="col" class="w-20 px-6 py-3 text-center">Inv. Total</th>
-            </tr>
-        </thead>
-        <tbody id="listaInv">
-        </tbody>
-        
-    </table>
-    <div id="cargando" class="w-screen flex flex-col px-6 py-3 w-full items-center justify-center">
-        <img src="/static/img/icono.ico" alt="Ícono de Admin" class="iconos carga">
-        <span class="font-medium text-xs">Cargando...</span>
+    <div style="width: 98%; margin: auto;" class="shadow-md overflow-x-none sm:rounded-lg">
+        <div class="sticky top-0 flex gap-3 items-center p-2 w-full bg-white overflow-x-auto overflow-y-auto flex-column md:flex-row flex-wrap">
+            <div class="bg-white">
+                <label for="buscar" class="block mb-2 text-sm font-medium text-gray-900">Referencia</label>
+                <div class="relative mt-1">
+                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="text" id="buscar" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar referencia">
+                </div>
+            </div>
+            <div class="searchable-select">
+                <label for="proveedores" class="block mb-2 text-sm font-medium text-gray-900">Proveedor</label>
+                <select id="proveedores" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="">Seleccionar</option>
+                </select>
+            </div>
+            <div class="searchable-select">
+                <label for="lineas" class="block mb-2 text-sm font-medium text-gray-900">Linea</label>
+                <select id="lineas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="">Seleccionar</option>
+                </select>
+            </div>
+        </div>
+        <div style="height: 34em;" class="relative overflow-y-auto overflow-x-auto bg-white border border-gray-300 rounded-lg">
+            <table class="text-sm overflow-x-auto text-left text-gray-500 rtl:text-right">
+                <thead style="top: 0" class="sticky w-full top-0 text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                      <th scope="col" class="px-6 py-3 text-center">Código</th>
+                      <th scope="col" style="width: 45em;" class="px-6 py-3 text-center text-ellipsis overflow-hidden whitespace-nowrap">Descripción</th>
+                      <th scope="col" class="px-6 py-3 text-center">BD 01</th>
+                      <th scope="col" class="px-6 py-3 text-center">BD 02</th>
+                      <th scope="col" class="px-6 py-3 text-center">BD 20</th>
+                      <th scope="col" class="px-6 py-3 text-center">Dsto</th>
+                      <th scope="col" class="w-40 px-6 py-3 text-center">Costo</th>
+                      <th scope="col" class="w-40 px-6 py-3 text-center">P. mayor</th>                
+                      <th scope="col" class="w-40 px-6 py-3 text-center">P. unidad</th>
+                      <th scope="col" class="px-6 py-3 text-center">Renta P. mayor</th>
+                      <th scope="col" class="px-6 py-3 text-center">Renta P. unidad</th>
+                      <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Fecha Ult. Compra</th>
+                    </tr>
+                </thead>
+                <tbody id="listaInv">
+                </tbody>
+            </table>
+            <div id="cargando" class="w-screen flex flex-col px-6 py-3 w-full items-center justify-center">
+                <img src="/static/img/icono.ico" alt="Ícono de Admin" class="iconos carga">
+                <span class="font-medium text-xs">Cargando...</span>
+            </div>
+        </div>
+        <nav class="w-full flex items-center w-full flex-column flex-wrap md:flex-row justify-between pt-4 px-6 mb-6" aria-label="Table navigation">
+            <span class="text-sm font-normal text-gray-500 mb-4 mx-4 md:mb-0 block w-full md:inline md:w-auto">Listado <span id="rango" class="font-semibold text-gray-900">0 - 0</span> de <span class="font-semibold text-gray-900" id="total">0</span></span>
+            <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm mx-4 h-8">
+                <li id="previo">
+                    <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">Anterior</a>
+                </li>
+                <li id="siguiente">
+                    <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+        <h2  class="copyright w-full flex gap-2 justify-center items-center">Copyright © 2024 por Dpto.Sistemas   <img src="{{ url_for('static', filename='img/icono.ico') }}" galt="Ícono de Admin" class="iconos">Plasdecor de Montería S.A.S. - Todos los Derechos Reservados</h2>
     </div>
-    <nav class="w-screen flex items-center w-full flex-column flex-wrap md:flex-row justify-between pt-4  mb-6" aria-label="Table navigation">
-        <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 mx-4 md:mb-0 block w-full md:inline md:w-auto">Listado <span id="rango" class="font-semibold text-gray-900 dark:text-white">0 - 0</span> de <span class="font-semibold text-gray-900 dark:text-white" id="total">0</span></span>
-        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm mx-4 h-8">
-            <li id="previo">
-                <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Anterior</a>
-            </li>
-            <li id="siguiente">
-                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Siguiente</a>
-            </li>
-        </ul>
-    </nav>
-    <h2  class="copyright w-full flex gap-2 justify-center items-center">Copyright © 2024 por Dpto.Sistemas   <img src="{{ url_for('static', filename='img/icono.ico') }}" galt="Ícono de Admin" class="iconos">Plasdecor de Montería S.A.S. - Todos los Derechos Reservados</h2>
-
 
     <script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>

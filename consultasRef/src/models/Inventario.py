@@ -10,7 +10,7 @@ class Inventario(Base):
     PROVEEDOR = Column(Integer)
     SUBGRUPO = Column(Integer)
     EXISTENCIA = Column(Integer)
-    ESTADO = Column(Integer)
+    COSTO = Column(Integer)
 
     def as_dict(self):
         return {
@@ -21,5 +21,5 @@ class Inventario(Base):
             'proveedor': self.PROVEEDOR,
             'subgrupo': self.SUBGRUPO,
             'existencia': self.EXISTENCIA,
-            'estado': self.ESTADO
+            'costo': self.COSTO
         }
