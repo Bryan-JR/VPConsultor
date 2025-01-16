@@ -6,13 +6,19 @@ from sqlalchemy import or_, text
 from src.db import Session, engine
 import pandas as pd
 import numpy as np
+from datetime import datetime, time
 import os
 import shutil
 controllerReferencia = Blueprint('controllerReferencia', __name__)
 
+def msg(client, mensaje):
+    hora_actual = datetime.now()
+    print(f'[{client}][{hora_actual}]: {mensaje}')
+
 @controllerReferencia.route('/', methods=['GET'])
 def inicio():
     try:
+        msg(request.remote_addr, f"Inició en administrador de referencia.")
         start = request.args.get('i', 0, type=int)
         end = request.args.get('f', 10, type=int)
         session = Session()
@@ -43,6 +49,7 @@ def buscar(cod):
     try:
         session = Session()
         codBarras = cod
+        msg(request.remote_addr, f"Buscó código de barras: ({codBarras})")
         ref = session.query(Referencia).filter_by(CODIGO_BARRAS=codBarras).first()
         return jsonify(ref.as_dict())
     except Exception as err:
@@ -52,14 +59,17 @@ def buscar(cod):
 
 @controllerReferencia.route('/consultar', methods=['GET'])
 def consultar():
+    msg(request.remote_addr, f"Lector conectado.")
     return render_template("lectores.html")
 
 @controllerReferencia.route('/generador/etiquetas', methods=['GET'])
 def generarEtiquetas():
+    msg(request.remote_addr, f"Inició generador de etiquetas.")
     return render_template("generadorEtiquetas.html")
 
 @controllerReferencia.route("/consultas")
 def scan():
+    msg(request.remote_addr, f"Inició consultor de referencias.")
     return render_template("consultas.html")
 
 @controllerReferencia.route('/buscador')
@@ -67,6 +77,7 @@ def getReferencia():
     try:
         ref = request.args.get('search')
         tab = request.args.get('table')
+        msg(request.remote_addr, f"Realiza busqueda: (referencia: {ref})(lista: {tab})")
         referencias = []
         if(ref!=""):
             db = Referencia
@@ -99,6 +110,7 @@ FILE_PATH_DSTO = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASEDESCUENTOS.xlsx'
 def guardar_datos():
     try:
         data = request.get_json()
+        msg(request.remote_addr, f"Asigna etiquetas a la BASE BarTender.")
         datosBASE = data
         datosDsto = data     
         df1 = pd.DataFrame(datosBASE)
@@ -117,6 +129,7 @@ def guardar_datos():
 def guardar_pulguero():
     try:
         data = request.get_json()
+        msg(request.remote_addr, f"Asigna etiquetas a la BASE Pulguero BarTender.")
         datosBASE = data
         datosDsto = data     
         df1 = pd.DataFrame(datosBASE)
@@ -132,6 +145,7 @@ def guardar_pulguero():
 @controllerReferencia.route("/editar/<ref>", methods=['GET', 'POST'])
 def editarPrecio(ref):
     try:
+        msg(request.remote_addr, f"Edita la referencia: ({ref})")
         session = Session()
         datos = request.get_json()
         descripcion = datos.get('descripcion')
@@ -171,6 +185,7 @@ def read_csv_with_encoding(filepath):
 @controllerReferencia.route('/sincronizar/precios')
 def sincronizacion():
     try:
+        msg(request.remote_addr, f"Inicia sincronización de referencias y precios.")
         session = Session()
         cont = session.query(Referencia).count()
         ultimoCargue = session.execute(text('''
@@ -197,6 +212,7 @@ def getIva(tipoIva):
 @controllerReferencia.route('/process_files', methods=['POST'])
 def process_files():
     try:
+        msg(request.remote_addr, f"Preprocesado de archivo LPL.txt.")
         shutil.copy(ruta_original, ruta_copia)
         print(f"Copia del directorio realizada correctamente: {ruta_copia}")
         ruta_listas_precios = os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')
@@ -213,7 +229,7 @@ def process_files():
         kardex_bodega_02 = kardex[kardex['BODEGA'] == 2]
 
 
-        kardex_activos = kardex_bodega_02[kardex_bodega_02['ESTADO ARTICULO'].isna() | (kardex_bodega_02['ESTADO ARTICULO'] == '') | (kardex_bodega_02['ESTADO ARTICULO'] == 0)]
+        kardex_activos = kardex_bodega_02[kardex_bodega_02['ESTADO ARTICULO'].isna() | (kardex_bodega_02['ESTADO ARTICULO'] == '') | (kardex_bodega_02['ESTADO ARTICULO'] == " ")]
         print("Cantidad 02: ", len(kardex_bodega_02))
         print("Cantidad 02 Activos: ", len(kardex_activos))
 
@@ -258,6 +274,7 @@ def process_files():
 @controllerReferencia.route('/process_pulguero', methods=['POST'])
 def process_pulguero():
     try:
+        msg(request.remote_addr, f"Preproceso de archivo LPL_pulguero.txt.")
         shutil.copy(ruta_original, ruta_copia)
         print(f"Copia del directorio realizada correctamente: {ruta_copia}")
         ruta_listas_precios = os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')
@@ -339,7 +356,7 @@ def actualizarImg():
 @controllerReferencia.route('/upload_lpl', methods=['GET'])
 def upload_lpl():
     ruta_lpl = os.path.join(ruta_carpeta_compartida, 'LPL.txt')
-
+    msg(request.remote_addr, f"Carga de archivo LPL.txt a la Base de datos.")
     try:
         session = Session()
         df = read_csv_with_encoding(ruta_lpl)
@@ -368,7 +385,7 @@ def upload_lpl():
 @controllerReferencia.route('/upload_pulguero', methods=['GET'])
 def upload_lpl_pulguero():
     ruta_lpl = os.path.join(ruta_carpeta_compartida, 'LPL_pulguero.txt')
-
+    msg(request.remote_addr, f"Carga de archivo LPL_pulguero.txt a la Base de datos.")
     try:
         session = Session()
         df = read_csv_with_encoding(ruta_lpl)

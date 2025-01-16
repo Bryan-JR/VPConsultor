@@ -7,6 +7,9 @@
     <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/estilosInv.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="/static/js/tailwind.js"></script>
 </head>
 <body class="flex flex-col justify-center items-center relative overflow-x-auto bg-white max-h-full h-full bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')]">
@@ -27,41 +30,35 @@
             </div>
             <div class="searchable-select">
                 <label for="proveedores" class="block mb-2 text-sm font-medium text-gray-900">Proveedor</label>
-                <select id="proveedores" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value="">Seleccionar</option>
+                <select id="proveedores" onchange="buscarDatos(1, 50);" style="padding: 6px 4px; border: none; outline: none;" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="">TODOS</option>
                 </select>
             </div>
             <div class="searchable-select">
                 <label for="lineas" class="block mb-2 text-sm font-medium text-gray-900">Linea</label>
-                <select id="lineas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value="">Seleccionar</option>
+                <select id="lineas" onchange="buscarDatos(1, 50);" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="">TODOS</option>
                 </select>
+            </div>
+            <div class="searchable-select">
+                <label for="import" class="block mb-2 text-sm font-medium text-gray-900">Exportar</label>
+                <button id="excel" class="flex items-center justify-center gap-1 font-bold bg-green-100 hover:bg-green-200 rounded-lg cursor-pointer text-green-700 py-1 px-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="28" height="28" aria-hidden="true" viewBox="0 0 48 48">
+                        <path fill="#169154" d="M29,6H15.744C14.781,6,14,6.781,14,7.744v7.259h15V6z"></path><path fill="#18482a" d="M14,33.054v7.202C14,41.219,14.781,42,15.743,42H29v-8.946H14z"></path><path fill="#0c8045" d="M14 15.003H29V24.005000000000003H14z"></path><path fill="#17472a" d="M14 24.005H29V33.055H14z"></path><g><path fill="#29c27f" d="M42.256,6H29v9.003h15V7.744C44,6.781,43.219,6,42.256,6z"></path><path fill="#27663f" d="M29,33.054V42h13.257C43.219,42,44,41.219,44,40.257v-7.202H29z"></path><path fill="#19ac65" d="M29 15.003H44V24.005000000000003H29z"></path><path fill="#129652" d="M29 24.005H44V33.055H29z"></path></g><path fill="#0c7238" d="M22.319,34H5.681C4.753,34,4,33.247,4,32.319V15.681C4,14.753,4.753,14,5.681,14h16.638 C23.247,14,24,14.753,24,15.681v16.638C24,33.247,23.247,34,22.319,34z"></path><path fill="#fff" d="M9.807 19L12.193 19 14.129 22.754 16.175 19 18.404 19 15.333 24 18.474 29 16.123 29 14.013 25.07 11.912 29 9.526 29 12.719 23.982z"></path>
+                    </svg> EXCEL <div id="cargaExcel"></div>
+                </button>
             </div>
         </div>
         <div style="height: 34em;" class="relative overflow-y-auto overflow-x-auto bg-white border border-gray-300 rounded-lg">
             <table class="text-sm overflow-x-auto text-left text-gray-500 rtl:text-right">
-                <thead style="top: 0" class="sticky w-full top-0 text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                      <th scope="col" class="px-6 py-3 text-center">Código</th>
-                      <th scope="col" style="width: 45em;" class="px-6 py-3 text-center text-ellipsis overflow-hidden whitespace-nowrap">Descripción</th>
-                      <th scope="col" class="px-6 py-3 text-center">BD 01</th>
-                      <th scope="col" class="px-6 py-3 text-center">BD 02</th>
-                      <th scope="col" class="px-6 py-3 text-center">BD 20</th>
-                      <th scope="col" class="px-6 py-3 text-center">Dsto</th>
-                      <th scope="col" class="w-40 px-6 py-3 text-center">Costo</th>
-                      <th scope="col" class="w-40 px-6 py-3 text-center">P. mayor</th>                
-                      <th scope="col" class="w-40 px-6 py-3 text-center">P. unidad</th>
-                      <th scope="col" class="px-6 py-3 text-center">Renta P. mayor</th>
-                      <th scope="col" class="px-6 py-3 text-center">Renta P. unidad</th>
-                      <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Fecha Ult. Compra</th>
-                    </tr>
+                <thead id="hdInv" style="top: 0" class="sticky w-full top-0 text-xs text-gray-700 uppercase bg-gray-50">
                 </thead>
                 <tbody id="listaInv">
                 </tbody>
             </table>
-            <div id="cargando" class="w-screen flex flex-col px-6 py-3 w-full items-center justify-center">
+            <div id="cargando" class="w-screen mt-6 flex flex-col px-6 py-3 w-full items-center justify-center">
                 <img src="/static/img/icono.ico" alt="Ícono de Admin" class="iconos carga">
-                <span class="font-medium text-xs">Cargando...</span>
+                <span class="font-medium text-md">Cargando...</span>
             </div>
         </div>
         <nav class="w-full flex items-center w-full flex-column flex-wrap md:flex-row justify-between pt-4 px-6 mb-6" aria-label="Table navigation">
@@ -81,5 +78,12 @@
     <script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
     <script src="{{ url_for('static', filename='js/inventarios.js') }}"></script>
+    <script>
+        // In your Javascript (external .js resource or <script> tag)
+        $(document).ready(function() {
+            $('select').select2();
+        });
+        
+    </script>
 </body>
 </html>

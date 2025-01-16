@@ -1,11 +1,13 @@
 from flask import Flask, send_from_directory, make_response, redirect, request
 from src.db import engine, Base
 # from flask_socketio import SocketIO
-# from waitress import serve
+from waitress import serve
 import ssl
 from src.controllers.controllerReferencia import controllerReferencia
 from src.controllers.controllerArchivo import controllerArchivo
 from src.controllers.controllerInventario import controllerInventario
+import logging
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'plasdecor'
@@ -53,19 +55,20 @@ def oculta_precio(valor):
 def oculta(valor):
     return oculta_precio(valor)
 
-@app.before_request
-def redirect_http_to_https():
-    if not request.is_secure:
-        return redirect(request.url.replace("https://", "http://", 1), code=301)
+# certfile = 'cert.pem'  
+# keyfile = 'key.pem'   
 
-certfile = 'cert.pem'  
-keyfile = 'key.pem'   
+# context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+# context.load_cert_chain(certfile=certfile, keyfile=keyfile)
 
-context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-context.load_cert_chain(certfile=certfile, keyfile=keyfile)
+# # Configurar el logging
+# logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger('waitress')
+# logger.setLevel(logging.INFO)
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False, ssl_context=context) 
+    #app.run(host='0.0.0.0', port=5000, debug=False, ssl_context=context) 
     # Iniciar Waitress con SSL
     # serve(
     #     app,
@@ -75,5 +78,6 @@ if __name__ == '__main__':
     #     url_scheme='https'
     # )
     #socketio.run(app, host='0.0.0.0', port=8443)
-    #serve(app, host='0.0.0.0', port=8000)
+    
+    serve(app, host='0.0.0.0', port=5050, threads=6)
 

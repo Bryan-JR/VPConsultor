@@ -44,3 +44,24 @@ div.relative.overflow-x-auto {
         transform: translateY(0);
     }
 }
+
+table {
+    width: 100%;
+}
+
+th {
+    cursor: pointer;
+    background-color: #f2f2f2;
+}
+
+th:hover {
+    background-color: #ddd;
+}
+
+th.asc::after {
+    content: " 🔼";
+}
+
+th.desc::after {
+    content: " 🔽";
+}

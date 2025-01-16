@@ -258,6 +258,16 @@ function mandarLista() {
         let ruta = "/guardarLista";
         if(tab.value == "pulguero") ruta = "/guardarPulguero";
         else ruta = "/guardarLista";
+        // listaRef.push({
+        //     "descripcion": "",
+        //     "codigo": "",
+        //     "ref": "",
+        //     "precio": "** CORTAR **",
+        //     "cantidad": 3,
+        //     "descuento": 0,
+        //     "precioDsto": 0,
+        //     "codBarras": 0,
+        // });
         axios.post(ruta, listaRef)
         .then(resp => {
             limpiarLista();
