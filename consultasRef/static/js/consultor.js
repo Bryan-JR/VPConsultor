@@ -6,7 +6,7 @@ const resultado = document.getElementById('resultado');
 const lista = document.getElementById("lista");
 const tablaB = document.getElementById("tablaB");
 let reposo;
-let listaProductos = [];
+var listaProductos = [];
 
 window.onload = buscaRef.focus();
 
@@ -160,6 +160,10 @@ async function getInventario(ref) {
         });
 }
 
+function copiar(r) {
+    navigator.clipboard.writeText(r);
+}
+
 
 async function cartaReferencia(obj) {
     tablaB.classList.add('hidden');
@@ -175,8 +179,8 @@ async function cartaReferencia(obj) {
                 
                 <h5 class="text-xl text-center mb-4 font-bold tracking-tight text-gray-900 dark:text-white" id="descripcion">${obj.descripcion}</h5>
                 <div class="my-2 flex justify-between items-center gap-2">
-                    <kbd class="px-4 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Código ${obj.referencia}</kbd>
-                    <kbd class="px-4 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">CodBarras ${obj.codBarras}</kbd>
+                    <kbd class="px-4 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 border border-gray-200 rounded-lg cursor-pointer" onclick="copiar('${obj.referencia}')" title="Copiar">Código ${obj.referencia}</kbd>
+                    <kbd class="px-4 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 border border-gray-200 rounded-lg cursor-pointer" onclick="copiar('${obj.codBarras}')" title="Copiar">CodBarras ${obj.codBarras}</kbd>
                     <kbd class="px-4 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg text-center">U.E ${obj.ue}</kbd>
                 </div>
                 ${divTabla}
@@ -211,49 +215,78 @@ async function mostrarInfo(i){
 }
 
 let refresco;
+let tipoCheck = document.getElementById("tipoCheck");
+let tipoTxt = document.getElementById("tipoTxt");
 let anchoPagina = window.innerWidth;
-let tipoB = "change";
-if (anchoPagina>768) {
-    tipoB = "keyup";
+let tipoB = localStorage.getItem("tipoB");
+
+if(tipoB=="change") {
+    tipoTxt.innerText = "Móvil";
+    tipoCheck.checked = false;
 }
 else {
-    tipoB = "change";
+    localStorage.setItem("tipoB", "keyup");
+    tipoTxt.innerText = "PC";
+    tipoCheck.checked = true;
 }
 
-console.log(anchoPagina);
-buscaRef.addEventListener(tipoB, () => {
-        if (anchoPagina>768) {
-            tipoB = "keyup";
-        }
-        else {
-            tipoB = "change";
-        }
-        lista.innerHTML = `
-                <tr class="flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50 overflow-none">
-                    <td class="py-2 px-4">
-                        <div role="status">
-                            <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        clearTimeout(refresco);
-        let ref = buscaRef.value;
-        if(ref!=""){
-            refresco = setTimeout(async() => {
-                await axios.get('/buscador?search='+ref)
-                .then( async resp => {
-                    listaProductos = await resp.data;
-                    await listarProductos();
-                    if (tipoB=="change" && !isNaN(buscaRef.value) && buscaRef.value.length > 10) buscaRef.value = "";
-                })
-                .catch(err =>{
-                    resultado.innerHTML = err;
-                })
-            }, 500);
-        }
+if(anchoPagina<=768 && !tipoCheck.checked) {
+    //localStorage.setItem("tipoB", "change");
+    startCameraButton.classList.remove('opacity-0');
+} else {
+    //localStorage.setItem("tipoB", "keyup");
+    startCameraButton.classList.add('opacity-0');
+}
+
+tipoCheck.addEventListener('click', ()=>{
+    if(tipoCheck.checked) {
+        tipoTxt.innerText = "PC";
+        localStorage.setItem("tipoB", "keyup");
+        startCameraButton.classList.add('opacity-0');
+    } else {
+        tipoTxt.innerText = "Móvil";
+        localStorage.setItem("tipoB", "change");
+        startCameraButton.classList.remove('opacity-0');
+    }
+    tipoB = localStorage.getItem("tipoB");
 });
+
+
+let cancelToken; // Almacena el token de cancelación
+async function consultaRef() {
+    lista.innerHTML = `
+        <tr class="flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50 overflow-none">
+            <td class="py-2 px-4">
+                <div role="status">
+                    <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </td>
+        </tr>
+    `;
+    clearTimeout(refresco);
+    if (buscaRef.value.trim() !== "") {
+        refresco = setTimeout(async() => {
+            if (cancelToken) {cancelToken.cancel("Nueva consulta realizada")};
+            cancelToken = axios.CancelToken.source();
+            try {
+                listaProductos = await axios.get('/buscador?search='+encodeURIComponent(buscaRef.value), {cancelToken: cancelToken.token});
+                listaProductos = listaProductos.data;
+                console.log(listaProductos);
+                await listarProductos();
+                if (tipoB=="change" && !isNaN(buscaRef.value) && buscaRef.value.length > 10) buscaRef.value = "";
+            } catch (error) {
+                if (axios.isCancel(error)) {
+                    console.log('Solicitud cancelada:', error.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
+        }, 200);
+    } 
+}
+
+buscaRef.addEventListener(tipoB,() => { consultaRef() });
 
 
 
@@ -312,7 +345,7 @@ startCameraButton.addEventListener('click', () => {
             }).catch((err) => {
                 document.getElementById('resultado').innerHTML = err;
             });
-        }, 200);
+        }, 180);
         
         // Aquí puedes realizar alguna acción con el código detectado, como enviarlo a tu servidor
     });

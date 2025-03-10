@@ -13,7 +13,11 @@ controllerReferencia = Blueprint('controllerReferencia', __name__)
 
 def msg(client, mensaje):
     hora_actual = datetime.now()
-    print(f'[{client}][{hora_actual}]: {mensaje}')
+    logFile = os.path.join(r'\\10.0.0.96\Compartida\logs', "peticiones.log")
+    msg = f'[{client}][{hora_actual}]: {mensaje}'
+    with open(logFile, "a") as log:
+        log.write(f"{msg}\n")
+    print(msg)
 
 @controllerReferencia.route('/', methods=['GET'])
 def inicio():
@@ -277,7 +281,7 @@ def process_pulguero():
         msg(request.remote_addr, f"Preproceso de archivo LPL_pulguero.txt.")
         shutil.copy(ruta_original, ruta_copia)
         print(f"Copia del directorio realizada correctamente: {ruta_copia}")
-        ruta_listas_precios = os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')
+        ruta_listas_precios = os.path.join(ruta_carpeta_compartida, 'precios_pulguero.txt')
         ruta_kardex = os.path.join(ruta_carpeta_compartida, 'kardex_pulguero.txt')
         ruta_imagenes = os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')
         ruta_salida = os.path.join(ruta_carpeta_compartida, 'LPL_pulguero.txt')

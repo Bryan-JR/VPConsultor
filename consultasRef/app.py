@@ -7,6 +7,8 @@ from src.controllers.controllerReferencia import controllerReferencia
 from src.controllers.controllerArchivo import controllerArchivo
 from src.controllers.controllerInventario import controllerInventario
 import logging
+from datetime import datetime, time
+import os
 
 
 app = Flask(__name__)
@@ -55,17 +57,13 @@ def oculta_precio(valor):
 def oculta(valor):
     return oculta_precio(valor)
 
-# certfile = 'cert.pem'  
-# keyfile = 'key.pem'   
-
-# context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-# context.load_cert_chain(certfile=certfile, keyfile=keyfile)
-
-# # Configurar el logging
-# logging.basicConfig(level=logging.INFO)
-# logger = logging.getLogger('waitress')
-# logger.setLevel(logging.INFO)
-
+def msg(client, mensaje):
+    hora_actual = datetime.now()
+    logFile = os.path.join(r'\\10.0.0.96\Compartida\logs', "peticiones.log")
+    msg = f'[{client}][{hora_actual}]: {mensaje}'
+    with open(logFile, "a") as log:
+        log.write(f"{msg}\n")
+    print(msg)
 
 if __name__ == '__main__':
     #app.run(host='0.0.0.0', port=5000, debug=False, ssl_context=context) 
@@ -78,6 +76,7 @@ if __name__ == '__main__':
     #     url_scheme='https'
     # )
     #socketio.run(app, host='0.0.0.0', port=8443)
-    
+    msg('SERVER', '*** SERVIDOR INICIADO ***')
     serve(app, host='0.0.0.0', port=5050, threads=6)
+    msg('SERVER', '*** SERVIDOR CERRADO ***')
 
