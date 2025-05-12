@@ -4,7 +4,7 @@ from src.db import Base
 class Referencia(Base):
     __tablename__ = 'ListaPreciosLectores'
     REFERENCIA = Column(String, primary_key=True)
-    BODEGA = Column(Integer)
+    TIPO_IVA = Column(Integer)
     CODIGO_BARRAS = Column(String)
     DESCRIPCION = Column(String)
     UNIDAD = Column(String)
@@ -16,7 +16,7 @@ class Referencia(Base):
     def as_dict(self):
         return {
             'referencia': self.REFERENCIA,
-            'bodega': self.BODEGA,
+            'tipo_iva': self.TIPO_IVA,
             'codBarras': str(self.CODIGO_BARRAS),
             'descripcion': self.DESCRIPCION,
             'ue': self.UNIDAD,

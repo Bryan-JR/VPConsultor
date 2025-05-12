@@ -184,7 +184,7 @@ function copiarCodigo(cod) {
     });
 }
 
-
+const checkM = document.getElementById("mayor");
 async function listarProductos(lista) {
     document.getElementById('tabInv').classList.add('hidden');
     document.getElementById('contBtn').classList.add('col-span-2');
@@ -194,7 +194,8 @@ async function listarProductos(lista) {
         let cod = ref.referencia;
         let desc = ref.descripcion;
         let may = ocultaPrecio(ref.precioxmayor);
-        let pre = formatearMoneda(ref.precioxunidad);
+        let pre = checkM.checked ? formatearMoneda(ref.precioxmayor) :  formatearMoneda(ref.precioxunidad);
+        //let pre = formatearMoneda(ref.precioxunidad);
         let dsto = (ref.descuento/100);
         let precioDsto = "";
         let precioMDsto = "";

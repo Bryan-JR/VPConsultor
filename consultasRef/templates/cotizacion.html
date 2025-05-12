@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
+  <title>Cotización VP</title>
+  <style>
+    :root {
+      --azul: #2980C9;
+      --fucsia: #C2146E;
+      --gris: #f4f4f4;
+      --borde: #ddd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 40px;
+      background-color: white;
+      color: #333;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid var(--azul);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      height: 80px;
+      margin-right: 20px;
+    }
+
+    .header h1 {
+      color: var(--fucsia);
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .header p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    h2 {
+      color: var(--azul);
+      border-bottom: 2px solid var(--azul);
+      padding-bottom: 4px;
+      margin-top: 30px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px 30px;
+      margin-top: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      padding: 6px;
+      border: 1px solid var(--borde);
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--borde);
+      padding: 6px;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--azul);
+      color: white;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .btnEliminar {
+      padding: 8px 16px;
+      margin-top: 0px;
+      background-color: rgb(255, 0, 0);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease;
+      font-weight: bold;
+    }
+
+    .btnEliminar:hover {
+      background-color: #ff3f3f;
+    }
+
+    .btnAgregar {
+      padding: 8px 16px;
+      margin-top: 8px;
+      background-color: rgb(251, 255, 0);
+      color: rgb(2, 2, 2);
+      border: 0.5px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease;
+      font-weight: bold;
+    }
+
+    .btnAgregar:hover {
+  background-color: #e7ff7b;
+  color: #000;
+}
+
+    .btnGuardar {
+      padding: 8px 16px;
+      margin-top: 8px;
+      background-color: rgb(8, 247, 0);
+      color: rgb(2, 2, 2);
+      border: 0.5px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease;
+      font-weight: bold;
+    }
+
+    .btnGuardar:hover {
+      background-color: #50ff6d;
+      color: #ffffff;
+      
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    input::placeholder {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.5); /* Más transparente */
+}
+
+/* Aplica estilo tipo NomPropio */
+input {
+  text-transform: capitalize;
+}
+
+.totales-container {
+  max-width: 400px;
+  margin-left: auto;
+  margin-top: 30px;
+  font-size: 1rem;
+  text-align: right;
+}
+.totales-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+.total-final {
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-top: 2px solid #000;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.observaciones {
+    bottom: 20mm;
+    left: 0;
+    right: 0;
+    text-align: left;
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #444;
+  }
+
+  #tabla-productos th:nth-child(1),
+#tabla-productos td:nth-child(1) {
+  width: 6%; /* Ref. */
+}
+
+#tabla-productos th:nth-child(2),
+#tabla-productos td:nth-child(2) {
+  width: 22%; /* Descripción */
+}
+
+#tabla-productos th:nth-child(3),
+#tabla-productos td:nth-child(3) {
+  width: 1%; /* Cantidad */
+}
+
+#tabla-productos th:nth-child(4),
+#tabla-productos td:nth-child(4) {
+  width: 6%; /* Precio con IVA */
+}
+
+#tabla-productos th:nth-child(5),
+#tabla-productos td:nth-child(5) {
+  width: 1%; /* Tipo IVA */
+}
+
+#tabla-productos th:nth-child(6),
+#tabla-productos td:nth-child(6) {
+  width: 5%; /* Precio sin IVA */
+}
+
+
+#tabla-productos th:nth-child(7),
+#tabla-productos td:nth-child(7) {
+  width: 4%; /* IVA */
+}
+
+#tabla-productos th:nth-child(8),
+#tabla-productos td:nth-child(8) {
+  width: 10%; /* Valor Neto */
+}
+
+#tabla-productos th:nth-child(9),
+#tabla-productos td:nth-child(9) {
+  width: 2%; /* Botón eliminar */
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px 0;
+}
+
+.header img {
+    max-height: 80px;
+}
+
+.company-info {
+    text-align: left;
+    flex: 1;
+}
+
+.cotizacion {
+    text-align: right;
+    font-size: 1.2em;
+}
+
+.resaltado {
+    color: #c2185b; 
+    font-weight: bold;
+    font-size: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+.numero-cotizacion {
+    color: #1976d2;
+    font-weight: bold;
+    font-size: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilo de mensaje flotante */
+.mensaje-flotante {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 128, 0, 0.85); /* Verde para éxito */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 10000;
+  animation: fadeout 5s forwards;
+}
+
+/* Estilo de error */
+.mensaje-flotante.error {
+  background: rgba(255, 0, 0, 0.85); /* Rojo para error */
+}
+
+/* Animación de desvanecimiento */
+@keyframes fadeout {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Estilo para el borde rojo de los campos con error */
+input {
+  transition: border 0.3s ease; /* Suaviza el cambio de borde */
+}
+
+input:invalid {
+  border: 2px solid red; /* Resalta el campo con borde rojo cuando es inválido */
+}
+
+/* Opcional: cambiar el fondo a un color suave para el campo con error */
+input.error {
+  background-color: #f8d7da; /* Color de fondo suave */
+}
+
+.mensaje-flotante {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255, 0, 0, 0.85); /* Rojo para error */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 10000;
+  animation: fadeout 5s forwards;
+}
+
+/* Animación de desvanecimiento */
+@keyframes fadeout {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+
+  @media (max-width: 768px) {
+  table, .totales-container {
+    font-size: 12px;
+  }
+}
+ 
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  /* Limpia los inputs */
+  input {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  border: none !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  color: black !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+  /* Oculta los placeholders */
+  input::placeholder {
+    color: transparent !important;
+  }
+
+  .mensaje-flotante {
+    display: none !important;
+  }
+
+  /* Establece impresión horizontal */
+  @page {
+    size: 420mm 297mm; /* A3 en orientación horizontal */
+    margin: 10mm;
+  }
+  .totales-container {
+    page-break-inside: avoid;
+  }
+  .observaciones {
+    font-style: normal;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="Logo Plasdecor">
+    <div class="company-info">
+      <h1>PLASDECOR DE MONTERÍA S.A.S.</h1>
+      <p>NIT: 900334132-2</p>
+      <p>Calle 37 Nº 1B - 65 Montería</p>
+      <p>Tel: 7810779 - 7814558 - 7811620</p>
+    </div>
+    <div class="cotizacion">
+        <p><strong class="resaltado">N° Cotización:  </strong><strong class="numero-cotizacion">{{ numero_cotizacion }}</strong></p>
+    </div>
+</div>
+
+  <h2>Información del Cliente</h2>
+
+<!-- Fila de 3 campos -->
+<div class="form-grid" style="grid-template-columns: repeat(3, 1fr);">
+  <div class="form-group">
+    <label><strong>Nombre del Cliente</strong></label>
+    <input type="text" placeholder="Digite nombre del cliente o empresa" required>
+  </div> 
+  <div class="form-group">
+    <label><strong>Dirección</strong></label>
+    <input type="text" placeholder="Digite dirección de entrega" required>
+  </div>
+  <div class="form-group">
+    <label><strong>Ciudad</strong></label>
+    <input type="text" placeholder="Digite ciudad" required>
+  </div>
+</div>
+
+<!-- Fila de 4 campos -->
+<div class="form-grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 10px;">
+  <div class="form-group">
+    <label><strong>Teléfono</strong></label>
+    <input type="tel" placeholder="Digite número de contacto" required pattern="[0-9]{10}">
+  </div>
+  <div class="form-group">
+    <label><strong>NIT</strong></label>
+    <input type="text" placeholder="Digite NIT del cliente" required pattern="\d{9}">
+  </div>
+  <div class="form-group">
+    <label><strong>Forma de Pago</strong></label>
+    <input type="text" placeholder="Ejemplo: Contado / Crédito" required>
+  </div>
+  <div class="form-group">
+    <label><strong>Vendedor</strong></label>
+    <input type="text" placeholder="Digite nombre del vendedor" required>
+  </div>
+</div>
+
+  <h2>Detalle de Productos</h2>
+  <div class="table-container">
+    <table id="tabla-productos">
+      <thead>
+        <tr>
+          <th>Codigo</th>
+          <th>Nombre Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Neto</th>
+          <th>Tipo IVA</th>
+          <th>Precio sin IVA</th>
+          <th>IVA</th>
+          <th>Valor Neto</th>
+          <th class="no-print">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se agregan dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+ 
+  <button class="btnAgregar no-print" onclick="agregarFila()"><i class="fas fa-box-open"></i> Agregar Producto</button>
+
+   <!-- Totales -->
+<div class="totales-container">
+    <div class="totales-item">
+      <label>Subtotal:</label>
+      <span id="subtotal">0.00</span>
+    </div>
+    <div class="totales-item">
+      <label>Total (IVA):</label>
+      <span id="iva-total">0.00</span>
+    </div>
+    <div class="totales-item total-final">
+      <label>Total General:</label>
+      <span id="total-general">0.00</span>
+    </div>
+  </div>
+
+  <div class="observaciones" style="text-align: left; margin-top: 40px; margin-left: 40px;">
+    <i class="fas fa-circle-info" style="color: #2c7be5;"></i><strong> Observaciones: </strong> Vigencia de la oferta 8 días, precios sujetos a cambio sin previo aviso.
+  </div>
+
+  <div style="text-align: center; margin-top: 40px;">
+    <button class="btnGuardar no-print" onclick="guardarYImprimir()"><i class="fas fa-print"></i> Imprimir o Guardar PDF</button>
+  </div>
+
+
+  <script>
+function agregarFila() {
+  const tbody = document.querySelector("#tabla-productos tbody");
+  const fila = document.createElement("tr");
+  fila.innerHTML = `
+    <td><input type="text" placeholder="Ref."></td>
+    <td><input type="text" placeholder="Descripción"></td>
+    <td><input type="number" min="0" oninput="recalcular(this)"></td>
+    <td>
+      <input type="text" min="0" step="0.01"
+             oninput="recalcular(this)"
+             onblur="formatearMonedaEnCampo(this); recalcular(this)">
+    </td>
+    <td>
+      <select class="iva-select" onchange="recalcular(this)">
+        <option value="1.19" selected>19%</option>
+        <option value="1.05">5%</option>
+        <option value="1.0285">2.85%</option>
+        <option value="1.00">0%</option>
+      </select>
+    </td>
+    <td><input type="text" readonly></td>
+    <td><input type="text" readonly></td>
+    <td><input type="text" readonly></td>
+    <td class="no-print"><button class="btnEliminar" onclick="eliminarFila(this)"><i class="fas fa-trash"></i></button></td>
+  `;
+  tbody.appendChild(fila);
+  actualizarTotales();
+}
+
+    function eliminarFila(btn) {
+      const fila = btn.closest("tr");
+      fila.remove();
+    }
+
+    function limpiarValorMonetario(valor) {
+  // Remover todos los caracteres no numéricos excepto comas y puntos
+  let valorLimpio = valor.replace(/[^\d,.]/g, '');
+  
+  // Si tiene punto y coma, asumimos que la coma es decimal
+  if(valorLimpio.includes('.') && valorLimpio.includes(',')) {
+    // Eliminar puntos (separadores de miles) y convertir coma en punto decimal
+    valorLimpio = valorLimpio.replace(/\./g, '').replace(',', '.');
+  } 
+  // Si solo tiene comas, verificar si es decimal o separador de miles
+  else if(valorLimpio.includes(',')) {
+    // Si hay más de una coma o la coma está en los últimos 3 dígitos, es decimal
+    if((valorLimpio.match(/,/g) || []).length > 1 || 
+       valorLimpio.indexOf(',') > valorLimpio.length - 4) {
+      valorLimpio = valorLimpio.replace(/\./g, '').replace(',', '.');
+    } else {
+      // Es separador de miles, eliminarlo
+      valorLimpio = valorLimpio.replace(/,/g, '');
+    }
+  }
+  // Si solo tiene puntos, verificar si es decimal o separador de miles
+  else if(valorLimpio.includes('.')) {
+    // Si hay más de un punto o el punto está en los últimos 3 dígitos, es decimal
+    if((valorLimpio.match(/\./g) || []).length > 1 || 
+       valorLimpio.indexOf('.') > valorLimpio.length - 4) {
+      // El último punto es decimal, los anteriores son separadores
+      const partes = valorLimpio.split('.');
+      const decimal = partes.pop();
+      valorLimpio = partes.join('') + '.' + decimal;
+    } else {
+      // Es separador de miles, eliminarlo
+      valorLimpio = valorLimpio.replace(/\./g, '');
+    }
+  }
+  
+  return parseFloat(valorLimpio) || 0;
+}
+
+function formatearMoneda(valor) {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 2
+  }).format(valor);
+}
+
+function recalcular(input) {
+  const fila = input.closest("tr");
+  const cantidad = parseFloat(fila.children[2].querySelector('input').value) || 0;
+  
+  // Limpiar el valor del precioIva
+  const precioIvaInput = fila.children[3].querySelector('input');
+  const precioIva = limpiarValorMonetario(precioIvaInput.value);
+  
+  // Obtener el valor del IVA seleccionado
+  const ivaSelect = fila.querySelector('.iva-select');
+  const ivaValue = parseFloat(ivaSelect ? ivaSelect.value : 1.19); // 19% por defecto
+  
+  console.log('----- VALORES EN RECALCULAR -----');
+  console.log('Valor bruto del campo:', precioIvaInput.value);
+  console.log('Valor limpio (numérico):', precioIva);
+  console.log('Cantidad:', cantidad);
+  console.log('Valor IVA aplicado:', ivaValue);
+  
+  // Calcular según el tipo de IVA
+  const precioSinIva = ivaValue === 1.00 ? precioIva : precioIva / ivaValue;
+  const iva = ivaValue === 1.00 ? 0 : precioIva - precioSinIva;
+  const valorNeto = precioIva * cantidad;
+  
+  console.log('Precio sin IVA:', precioSinIva);
+  console.log('IVA:', iva);
+  console.log('Valor Neto:', valorNeto);
+  
+  fila.children[5].querySelector('input').value = formatearMoneda(precioSinIva);
+  fila.children[6].querySelector('input').value = formatearMoneda(iva);
+  fila.children[7].querySelector('input').value = formatearMoneda(valorNeto);
+
+  actualizarTotales();
+}
+
+function actualizarTotales() {
+  let subtotal = 0;
+  let ivaTotal = 0;
+  let totalGeneral = 0;
+
+  console.log('\n===== CALCULANDO TOTALES =====');
+  
+  const filas = document.querySelectorAll("#tabla-productos tbody tr");
+  filas.forEach((fila, index) => {
+    const cantidad = parseFloat(fila.children[2].querySelector('input').value) || 0;
+    const precioIva = limpiarValorMonetario(fila.children[3].querySelector('input').value);
+    const ivaSelect = fila.querySelector('.iva-select');
+    const ivaValue = parseFloat(ivaSelect ? ivaSelect.value : 1.19);
+    
+    const precioSinIva = ivaValue === 1.00 ? precioIva : precioIva / ivaValue;
+    const iva = ivaValue === 1.00 ? 0 : precioIva - precioSinIva;
+    const valorNeto = precioIva * cantidad;
+    
+    console.log(`\nFila ${index + 1}:`);
+    console.log('Tipo IVA:', (ivaValue-1)*100 + '%');
+    console.log('Precio con IVA:', precioIva);
+    console.log('Precio sin IVA:', precioSinIva);
+    console.log('IVA:', iva);
+    console.log('Valor Neto:', valorNeto);
+
+    subtotal += precioSinIva * cantidad;
+    ivaTotal += iva * cantidad;
+    totalGeneral += valorNeto;
+  });
+
+  console.log('\n===== TOTALES FINALES =====');
+  console.log('Subtotal:', subtotal);
+  console.log('IVA Total:', ivaTotal);
+  console.log('Total General:', totalGeneral);
+
+  document.getElementById("subtotal").textContent = formatearMoneda(subtotal);
+  document.getElementById("iva-total").textContent = formatearMoneda(ivaTotal);
+  document.getElementById("total-general").textContent = formatearMoneda(totalGeneral);
+}
+
+function formatearMonedaEnCampo(input) {
+  // Primero limpiar el valor
+  let valor = limpiarValorMonetario(input.value);
+  
+  console.log('\nFormateando moneda en campo:');
+  console.log('Valor original:', input.value);
+  console.log('Valor limpio:', valor);
+  console.log('Valor formateado:', formatearMoneda(valor));
+  
+  // Luego formatear
+  input.value = formatearMoneda(valor);
+}
+
+function mostrarMensaje(mensaje, tipo = 'success') {
+  const div = document.createElement("div");
+  div.textContent = mensaje;
+  div.classList.add('mensaje-flotante'); // Clase común para todos los mensajes
+  
+  // Si es un error, agregamos la clase de error
+  if (tipo === 'error') {
+    div.classList.add('error');
+  }
+
+  document.body.appendChild(div);
+
+  setTimeout(() => {
+    div.remove();
+  }, 5000);
+}
+
+function validarFormulario() {
+  const cliente = document.querySelector("input[placeholder='Digite nombre del cliente o empresa']");
+  const direccion = document.querySelector("input[placeholder='Digite dirección de entrega']");
+  const ciudad = document.querySelector("input[placeholder='Digite ciudad']");
+  const telefono = document.querySelector("input[placeholder='Digite número de contacto']"); 
+  const nit = document.querySelector("input[placeholder='Digite NIT del cliente']"); 
+  const formaPago = document.querySelector("input[placeholder='Ejemplo: Contado / Crédito']"); 
+  const vendedor = document.querySelector("input[placeholder='Digite nombre del vendedor']");
+
+  // Limpiar estilos de error previos
+  limpiarEstilosError();
+
+  // Verificar que todos los campos obligatorios estén llenos
+  let valid = true;
+  if (!cliente.value) {
+    mostrarMensaje("Todos los campos son obligatorios.", 'error');
+    resaltarCampo(cliente);
+    valid = false;
+  }
+  if (!direccion.value) {
+    mostrarMensaje("Todos los campos son obligatorios.", 'error');
+    resaltarCampo(direccion);
+    valid = false;
+  }
+  if (!ciudad.value) {
+    mostrarMensaje("Todos los campos son obligatorios.", 'error');
+    resaltarCampo(ciudad);
+    valid = false;
+  }
+  if (!telefono.value) {
+    mostrarMensaje("Todos los campos son obligatorios.", 'error');
+    resaltarCampo(telefono);
+    valid = false;
+  }
+  if (!nit.value) {
+    mostrarMensaje("Todos los campos son obligatorios.", 'error');
+    resaltarCampo(nit);
+    valid = false;
+  }
+  if (!formaPago.value) {
+    mostrarMensaje("Todos los campos son obligatorios.", 'error');
+    resaltarCampo(formaPago);
+    valid = false;
+  }
+  if (!vendedor.value) {
+    mostrarMensaje("Todos los campos son obligatorios.", 'error');
+    resaltarCampo(vendedor);
+    valid = false;
+  }
+
+  return valid; // Retorna true si todo está bien, sino false
+}
+
+// Resaltar el campo de entrada con un borde rojo
+function resaltarCampo(campo) {
+  campo.style.border = "2px solid red";
+}
+
+// Limpiar los estilos de error previos (borde rojo)
+function limpiarEstilosError() {
+  const campos = document.querySelectorAll("input");
+  campos.forEach(campo => {
+    campo.style.border = ""; // Limpiar el borde rojo
+  });
+}
+
+
+function guardarYImprimir() {
+  if (!validarFormulario()) {
+    return; // Si el formulario no es válido, no hacer nada
+  }
+  const encabezado = {
+    cliente: document.querySelector("input[placeholder='Digite nombre del cliente o empresa']").value,
+    direccion: document.querySelector("input[placeholder='Digite dirección de entrega']").value,
+    ciudad: document.querySelector("input[placeholder='Digite ciudad']").value,
+    telefono: document.querySelector("input[placeholder='Digite número de contacto']").value,
+    nit: document.querySelector("input[placeholder='Digite NIT del cliente']").value,
+    forma_pago: document.querySelector("input[placeholder='Ejemplo: Contado / Crédito']").value,
+    vendedor: document.querySelector("input[placeholder='Digite nombre del vendedor']").value
+  };
+
+  const filas = document.querySelectorAll("#tabla-productos tbody tr");
+  const detalle = Array.from(filas).map(fila => ({
+    codigo: fila.children[0].querySelector("input").value,
+    nombre: fila.children[1].querySelector("input").value,
+    cantidad: parseInt(fila.children[2].querySelector("input").value) || 0,
+    precio_neto: limpiarValorMonetario(fila.children[3].querySelector("input").value),
+    tipo_iva: parseFloat(fila.querySelector(".iva-select").value),
+    precio_sin_iva: limpiarValorMonetario(fila.children[5].querySelector("input").value),
+    iva: limpiarValorMonetario(fila.children[6].querySelector("input").value),
+    valor_neto: limpiarValorMonetario(fila.children[7].querySelector("input").value)
+  }));
+
+  fetch("/guardar-cotizacion", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ encabezado, detalle })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      mostrarMensaje(`Cotización ${data.numero} guardada con éxito`);
+    window.print();
+    window.location.reload();
+    } else {
+      alert("Error: " + data.mensaje);
+    }
+  })
+  .catch(err => alert("Error al conectar con el servidor: " + err));
+}
+
+function mostrarMensaje(mensaje) {
+  const div = document.createElement("div");
+  div.textContent = mensaje;
+  div.classList.add("mensaje-flotante");
+  div.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 128, 0, 0.85);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 10000;
+    animation: fadeout 5s forwards;
+  `;
+  document.body.appendChild(div);
+
+  setTimeout(() => {
+    div.remove();
+  }, 5000);
+}
+
+const style = document.createElement("style");
+style.innerHTML = `
+  @keyframes fadeout {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
+
+document.addEventListener("DOMContentLoaded", function () {
+  fetch("/")
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("numero-cotizacion").value = data.proxima_cotizacion;
+    })
+    .catch(error => {
+      console.error("Error al obtener número de cotización:", error);
+      document.getElementById("numero-cotizacion").value = "ERROR";
+    });
+});
+
+  </script>
+
+</body>
+</html>

@@ -78,7 +78,7 @@ async function checkFiles() {
             for (const [file, exists] of Object.entries(data)) {
                 // Define icon classes based on file existence
                 const iconClass = exists[0] ? 'check' : 'cross';
-                const statusText = exists[0] ? `${file} está cargado (${(exists[1] / (1024 ** 2)).toFixed(2)} MB)` : `${file} falta`;
+                const statusText = exists[0] ? `${file} está cargado (${(exists[1] / (1024 ** 2)).toFixed(2)} MB) &nbsp;&nbsp;<span class="fechaMod">${exists[2]}</span>` : `${file} falta`;
                 
                 message += `
                     <div>

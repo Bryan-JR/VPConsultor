@@ -161,3 +161,10 @@ input[type="file"]:hover {
     border-top: 1px solid #ddd; /* Línea horizontal arriba del texto */
     padding-top: 10px; /* Espacio entre la línea y el texto */
 }
+
+.fechaMod{
+    color: #4d4c4c;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 12px;
+}

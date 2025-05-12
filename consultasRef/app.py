@@ -6,6 +6,8 @@ import ssl
 from src.controllers.controllerReferencia import controllerReferencia
 from src.controllers.controllerArchivo import controllerArchivo
 from src.controllers.controllerInventario import controllerInventario
+from src.controllers.controllerProveedor import controllerProveedor
+from src.controllers.controllerCotizaciones import controllerCotizaciones
 import logging
 from datetime import datetime, time
 import os
@@ -16,6 +18,8 @@ app.config['SECRET_KEY'] = 'plasdecor'
 app.register_blueprint(controllerReferencia)
 app.register_blueprint(controllerArchivo)
 app.register_blueprint(controllerInventario)
+app.register_blueprint(controllerProveedor)
+app.register_blueprint(controllerCotizaciones)
 
 def formatear_moneda(valor):
     formato = "{:,.0f}".format(valor)

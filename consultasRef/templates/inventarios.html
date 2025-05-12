@@ -28,13 +28,13 @@
                     <input type="text" id="buscar" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar referencia">
                 </div>
             </div>
-            <div class="searchable-select">
+            <div class="searchable-select w-80">
                 <label for="proveedores" class="block mb-2 text-sm font-medium text-gray-900">Proveedor</label>
                 <select id="proveedores" onchange="buscarDatos(1, 50);" style="padding: 6px 4px; border: none; outline: none;" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value="">TODOS</option>
+                    <!-- <option value="">TODOS</option> -->
                 </select>
             </div>
-            <div class="searchable-select">
+            <div class="searchable-select w-80">
                 <label for="lineas" class="block mb-2 text-sm font-medium text-gray-900">Linea</label>
                 <select id="lineas" onchange="buscarDatos(1, 50);" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">TODOS</option>
@@ -72,7 +72,7 @@
                 </li>
             </ul>
         </nav>
-        <h2  class="copyright w-full flex gap-2 justify-center items-center">Copyright © 2024 por Dpto.Sistemas   <img src="{{ url_for('static', filename='img/icono.ico') }}" galt="Ícono de Admin" class="iconos">Plasdecor de Montería S.A.S. - Todos los Derechos Reservados</h2>
+        <h2  class="copyright w-full flex gap-2 justify-center items-center">Copyright © 2025 por Dpto.Sistemas   <img src="{{ url_for('static', filename='img/icono.ico') }}" galt="Ícono de Admin" class="iconos">Plasdecor de Montería S.A.S. - Todos los Derechos Reservados</h2>
     </div>
 
     <script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>

@@ -2,20 +2,29 @@ let buscador = document.getElementById('busqueda');
 let tabBody = document.getElementById('tabBody')
 
 let reposo;
+let cancelToken;
+var refs = [];
+
 
 buscador.addEventListener('keyup', () => {
     if(buscador.value!=""){
         clearTimeout(reposo);
-        reposo = setTimeout(() => {
-            axios.get('/buscador?search='+buscador.value)
-            .then((result) => {
-                let refs = result.data;
+        reposo = setTimeout(async () => {
+            if (cancelToken) {cancelToken.cancel("Nueva consulta realizada")};
+            cancelToken = axios.CancelToken.source();
+            try {
+                refs = await axios.get('/buscador?search='+ encodeURIComponent(buscador.value), {cancelToken: cancelToken.token})
+                refs = refs.data;
+                console.log(refs);
                 if(refs.length>0){
-                    listarProductos(refs);
+                   await listarProductos(refs);
                 }
-            }).catch((err) => {
-                alert("Ocurrio un error: \n"+ err);
-            }); 
+            } catch (error) {
+                if (axios.isCancel(error)) {
+                } else {
+                    console.log(error.message);
+                }
+            }
         }, 500);
     }
 })
@@ -80,9 +89,9 @@ function editarPrecio(ref) {
       });
 }
 
-function listarProductos(lista) {
+async function listarProductos(lista) {
     tabBody.innerHTML = "";
-    lista.forEach(ref => {
+    await lista.forEach(ref => {
         tabBody.innerHTML += `
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">

@@ -9,12 +9,23 @@ import numpy as np
 from datetime import datetime, time
 import os
 import shutil
+import socket
+from functools import lru_cache
 controllerReferencia = Blueprint('controllerReferencia', __name__)
+
+
+# Caché para almacenar los resultados de las IPs resueltas
+@lru_cache(maxsize=100)
+def getName(ip):
+    try:
+        return socket.gethostbyaddr(ip)[0]  # Obtiene el nombre del equipo
+    except socket.herror:
+        return "Nombre desconocido"
 
 def msg(client, mensaje):
     hora_actual = datetime.now()
     logFile = os.path.join(r'\\10.0.0.96\Compartida\logs', "peticiones.log")
-    msg = f'[{client}][{hora_actual}]: {mensaje}'
+    msg = f'[{getName(client)} ({client})][{hora_actual}]: {mensaje}'
     with open(logFile, "a") as log:
         log.write(f"{msg}\n")
     print(msg)
@@ -260,8 +271,8 @@ def process_files():
         precios_01 = precios_01.rename(columns={'PRECIO CON IVA': 'PRECIOXUNIDAD'})
         precios_01['PRECIOXUNIDAD'] = precios_01['PRECIOXUNIDAD'].fillna(0).round(0).astype(int)
 
-        kardex_activos = kardex_activos.rename(columns={'CODIGO BARRAS': 'CODIGO_BARRAS', 'DCTO VENTA': 'DESCUENTO'})
-        resultado = kardex_activos[['REFERENCIA', 'DESCRIPCION', 'CODIGO_BARRAS', 'UNIDAD', 'PRECIOXMAYOR', 'DESCUENTO']]
+        kardex_activos = kardex_activos.rename(columns={'CODIGO BARRAS': 'CODIGO_BARRAS', 'DCTO VENTA': 'DESCUENTO', 'TIPO IVA': 'TIPO_IVA'})
+        resultado = kardex_activos[['REFERENCIA','TIPO_IVA',  'DESCRIPCION', 'CODIGO_BARRAS', 'UNIDAD', 'PRECIOXMAYOR', 'DESCUENTO']]
         resultado = resultado.merge(precios_01, on='REFERENCIA', how='left')
 
         imagenes.set_index('REFERENCIA', inplace=True)
@@ -322,8 +333,8 @@ def process_pulguero():
         precios_01 = precios_01.rename(columns={'PRECIO CON IVA': 'PRECIOXUNIDAD'})
         precios_01['PRECIOXUNIDAD'] = precios_01['PRECIOXUNIDAD'].fillna(0).round(0).astype(int)
 
-        kardex_activos = kardex_activos.rename(columns={'CODIGO BARRAS': 'CODIGO_BARRAS', 'DCTO VENTA': 'DESCUENTO'})
-        resultado = kardex_activos[['REFERENCIA', 'BODEGA', 'DESCRIPCION', 'CODIGO_BARRAS', 'UNIDAD', 'PRECIOXMAYOR', 'DESCUENTO']]
+        kardex_activos = kardex_activos.rename(columns={'CODIGO BARRAS': 'CODIGO_BARRAS', 'DCTO VENTA': 'DESCUENTO', "TIPO IVA": "TIPO_IVA"})
+        resultado = kardex_activos[['REFERENCIA', 'TIPO_IVA', 'DESCRIPCION', 'CODIGO_BARRAS', 'UNIDAD', 'PRECIOXMAYOR', 'DESCUENTO']]
         resultado = resultado.merge(precios_01, on='REFERENCIA', how='left')
 
         imagenes.set_index('REFERENCIA', inplace=True)
@@ -414,11 +425,23 @@ def upload_lpl_pulguero():
     finally:
         session.close()
 
+def mer(h):
+    p = "a.m." if h.hour < 12 else "p.m."
+    return p
+
 @controllerReferencia.route('/check_files', methods=['GET'])
 def check_files():
+    listaPrecioTime = os.path.getmtime(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt'))
+    kardexTime = os.path.getmtime(os.path.join(ruta_carpeta, 'AdatecKardex.txt'))
+    imagenesTime = os.path.getmtime(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt'))
+    # Convertir el timestamp a una fecha legible
+    fecha_lp = datetime.fromtimestamp(listaPrecioTime)
+    fecha_kardex = datetime.fromtimestamp(kardexTime)
+    fecha_img = datetime.fromtimestamp(imagenesTime)
+    
     archivos = {
-        'AdatecListaPrecios.txt': (os.path.isfile(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')), os.path.getsize(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt'))),
-        'AdatecKardex.txt': (os.path.isfile(os.path.join(ruta_carpeta, 'AdatecKardex.txt')), os.path.getsize(os.path.join(ruta_carpeta, 'AdatecKardex.txt'))),
-        'Imagenes.txt': (os.path.isfile(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')), os.path.getsize(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')))
+        'AdatecListaPrecios.txt': (os.path.isfile(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')), os.path.getsize(os.path.join(ruta_carpeta, 'AdatecListaPrecios.txt')), fecha_lp.strftime(f"%I:%M:%S {mer(fecha_lp)} de %d %b %Y")),
+        'AdatecKardex.txt': (os.path.isfile(os.path.join(ruta_carpeta, 'AdatecKardex.txt')), os.path.getsize(os.path.join(ruta_carpeta, 'AdatecKardex.txt')), fecha_kardex.strftime(f"%I:%M:%S {mer(fecha_kardex)} de %d %b %Y")),
+        #'Imagenes.txt': (os.path.isfile(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')), os.path.getsize(os.path.join(ruta_carpeta_compartida, 'Imagenes.txt')), fecha_img.strftime("%I:%M:%S %p de %d %b %Y"))
     }
     return jsonify(archivos), 200
