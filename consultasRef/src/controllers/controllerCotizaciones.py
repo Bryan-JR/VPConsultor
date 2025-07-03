@@ -1,5 +1,5 @@
-from flask import Flask, Blueprint, request, jsonify, render_template, json
-#from flask_cors import CORS
+from flask import Flask, Blueprint, request, jsonify, render_template, json, redirect, url_for
+# from flask_cors import CORS
 import pyodbc
 
 
@@ -37,6 +37,10 @@ def obtener_proxima_cotizacion():
         print("Error al obtener cotización:", e)
         return "VPERROR"
 
+
+@controllerCotizaciones.route('/ultimaCot')
+def ultimaCot():
+    return obtener_proxima_cotizacion()
 
 @controllerCotizaciones.route('/cotizaciones')
 def index():
@@ -128,3 +132,83 @@ def guardar_cotizacion():
     except Exception as e:
         return jsonify({"success": False, "mensaje": str(e)})
 
+@controllerCotizaciones.route('/obtener-cotizacion/<numero>', methods=['GET'])
+def obtener_cotizacion(numero):
+    try:
+        conn = obtener_conexion()
+        if conn:
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT * FROM EncabezadoCotizacion WHERE NumeroCotizacion = ?", numero)
+            encabezado_row = cursor.fetchone()
+            if not encabezado_row:
+                return jsonify({"success": False, "mensaje": "Cotización no encontrada."})
+
+            encabezado = dict(zip([column[0] for column in cursor.description], encabezado_row))
+
+            cursor.execute("SELECT * FROM DetalleCotizacion WHERE EncabezadoId = ?", encabezado["Id"])
+            detalle_rows = cursor.fetchall()
+            detalle = [dict(zip([column[0] for column in cursor.description], row)) for row in detalle_rows]
+
+            return jsonify({"success": True, "encabezado": encabezado, "detalle": detalle})
+
+        return jsonify({"success": False, "mensaje": "No se pudo conectar con la base de datos."})
+    except Exception as e:
+        return jsonify({"success": False, "mensaje": str(e)})
+    
+@controllerCotizaciones.route('/editar-cotizacion/<id>', methods=['PUT'])
+def editar_cotizacion(id):
+    data = request.json
+    encabezado = data.get("encabezado")
+    detalle = data.get("detalle")
+
+    try:
+        conn = obtener_conexion()
+        if conn:
+            cursor = conn.cursor()
+
+            # Actualizar encabezado
+            cursor.execute("""
+                UPDATE EncabezadoCotizacion SET
+                Cliente = ?, Direccion = ?, Ciudad = ?, Telefono = ?, Nit = ?, FormaPago = ?, Vendedor = ?
+                WHERE Id = ?
+            """, (
+                encabezado["cliente"],
+                encabezado["direccion"],
+                encabezado["ciudad"],
+                encabezado["telefono"],
+                encabezado["nit"],
+                encabezado["forma_pago"],
+                encabezado["vendedor"],
+                id
+            ))
+
+            # Eliminar detalles existentes
+            cursor.execute("DELETE FROM DetalleCotizacion WHERE EncabezadoId = ?", id)
+
+            # Insertar nuevos detalles
+            for item in detalle:
+                cursor.execute("""
+                    INSERT INTO DetalleCotizacion
+                    (EncabezadoId, Codigo, NombreProducto, Cantidad, PrecioNeto, TipoIVA, PrecioSinIVA, IVA, ValorNeto)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    id,
+                    item["codigo"],
+                    item["nombre"],
+                    item["cantidad"],
+                    item["precio_neto"],
+                    item["tipo_iva"],
+                    item["precio_sin_iva"],
+                    item["iva"],
+                    item["valor_neto"]
+                ))
+
+            conn.commit()
+            conn.close()
+
+            return jsonify({"success": True, "mensaje": "Cotización actualizada con éxito."})
+
+        return jsonify({"success": False, "mensaje": "No se pudo conectar con la base de datos."})
+    except Exception as e:
+        return jsonify({"success": False, "mensaje": str(e)})

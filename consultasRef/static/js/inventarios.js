@@ -19,7 +19,9 @@ axios.get('/proveedores').then(proveedores => {
     
 });
 const lineas = [{ Linea: 10, DESCRIPCION: "ALAMBRES" }, { Linea: 7, DESCRIPCION: "ALUMINIO Y FUNDIDO" }, { Linea: 15, DESCRIPCION: "BICICLETAS" }, { Linea: 24, DESCRIPCION: "DECORACION HOGAR" }, { Linea: 1, DESCRIPCION: "ELECTRODOMESTICOS MAYORES" }, { Linea: 2, DESCRIPCION: "ELECTRODOMESTICOS MENORES" }, { Linea: 4, DESCRIPCION: "ESCOLAR" }, { Linea: 17, DESCRIPCION: "HIERRO ALEADO Y FUNDIDO" }, { Linea: 18, DESCRIPCION: "HAMACAS Y TOALLAS" }, { Linea: 5, DESCRIPCION: "IMPORTADOS VARIOS" }, { Linea: 6, DESCRIPCION: "JUGUETERIA" }, { Linea: 21, DESCRIPCION: "JUGUETERIA IMPORTADA" }, { Linea: 9, DESCRIPCION: "LOCERIA" }, { Linea: 14, DESCRIPCION: "NACIONAL VARIOS" }, { Linea: 22, DESCRIPCION: "PIÑATERIA" }, { Linea: 3, DESCRIPCION: "PLASTICOS" }, { Linea: 8, DESCRIPCION: "CRISTALERIA" }, { Linea: 19, DESCRIPCION: "TELAS" }];
+const subgrupos = [["100","EVENTOS Y PUBLICIDAD"],["101","LAVADORAS"],["102","CONGELADORES"],["103","NEVERAS"],["104","ESTUFAS  GHAMA ALTA"],["105","AIRES ACONDICIONADOS"],["106","TELEVISORES"],["107","EQUIPOS DE SONIDO"],["108","DVD´S Y GRABADORAS"],["110","DISPENSADORES"],["111","CAMPANAS EXTRACTORAS"],["201","PICATODO"],["202","CAFETERAS"],["203","HORNOS"],["204","SANDUCHERAS"],["205","SONIDO"],["206","ESTUFA SENCILLA"],["208","N/A"],["209","N/A"],["210","LICUADORAS"],["211","PLANCHAS"],["212","VENTILADORES"],["219","PROCESADOR"],["220","OLLA  ARROCERA"],["221","ELECTRODOMESTICOS VARIOS"],["222","EXPRIMIDOR Y EXTRACTOR"],["301","SILLAS"],["302","TANQUES"],["303","BALDES"],["304","PONCHERAS"],["305","PORTACOMIDAS"],["306","ARTICULOS COCINA PLASTICOS"],["307","BUTACOS"],["308","BANDEJAS"],["309","BAÑERAS"],["310","CEPILLOS"],["311","CAJAS HERRAMIENTAS"],["312","CAJAS ORGANIZADORAS"],["313","JARRAS"],["314","SALSEROS"],["315","RECIPIENTES"],["316","TAZONES"],["317","PAPELERAS Y BASUREROS"],["318","N/A"],["319","VASOS PLASTICOS"],["320","CESTAS"],["321","CUBIERTEROS"],["322","ORGANIZADORES DE BAÑOS"],["323","ENSALADERAS"],["324","PLASTICOS VARIOS"],["325","MESAS"],["326","BOTELLONES Y GARRAFAS"],["327","PLATOS PLASTICOS"],["329","LONCHERAS"],["330","ESTANTES Y MUEBLES"],["331","N/A"],["332","POCILLOS PLASTICOS"],["333","N/A"],["334","N/A"],["336","CANASTAS"],["337","BOTELLAS Y BOTILITOS"],["338","N/A"],["339","THERMOS"],["341","CAJONERO"],["344","ALCANCIAS"],["345","N/A"],["346","ATOMIZADORES"],["347","ARTICULOS DE ASEO"],["348","VASO DE NOCHE"],["352","COLADORES"],["353","PORTAVAJILLAS"],["354","TABLAS DE CORTAR O PICAR"],["355","GANCHOS DE ROPA"],["356","RALLADORES GENERAL"],["357","PESEBRES"],["358","ESCURRIDORES PLASTICO"],["359","TAZAS"],["360","MATERAS"],["361","ARMARIOS"],["362","NEVERAS Y TERMOS PARA FRIO"],["363","TETEROS"],["401","CUADERNOS"],["402","BOLSOS ESCOLARES"],["403","BLOCK'S"],["404","LAPICEROS"],["405","CARPETAS ESCOLARES"],["408","CUADERNO COSIDO"],["409","CUADERNO ARGOLLADO"],["410","CUADERNO EMPASTADO"],["411","CUADERNO GRAPADO"],["412","COLORES"],["413","LAPICES"],["417","N/A"],["418","AGENDAS"],["420","MARCADORES"],["422","CUENTOS"],["423","CARTON PAJA"],["424","SOBRES"],["425","VINILOS Y TEMPERAS"],["426","DICCIONARIOS"],["427","PLASTILINAS"],["428","ESCALERAS"],["429","N/A"],["430","N/A"],["431","SACAPUNTAS"],["432","ESCUADRAS Y TRANSPORTADORES"],["433","JUEGO GEOMETRICO"],["434","REGLAS"],["435","ESCOLAR VARIOS"],["437","PAPELES Y CARTULINAS"],["438","CARTUCHERAS"],["439","CUAD.COS DESC"],["440","CUAD.GRAP DESC"],["441","CUAD.D-BOOK DESC"],["442","CUAD.EMPAST DESC"],["443","CUAD.ARG DESC"],["444","BORRADORES"],["445","ABACOS"],["446","IMPLEMENTOS DE OFICINA"],["501","PLATO BANDEJA Y CHOCHA MELAMIN"],["505","VASO MELAMINA"],["506","POCILLO MELAMINA"],["509","IMPORTADOS VARIOS"],["513","JARROS"],["517","PLATO BANDEJA Y CHOCHA MELAFOR"],["519","BOLSAS  Y BOLSOS"],["521","SOMBRILLAS"],["522","HALLOWEEN"],["524","FLORES"],["525","BOLSAS DE REGALO"],["526","RELOJES"],["527","ARTICULOS DE BEBES"],["601","MUÑECAS"],["602","CARROS"],["603","BALONES"],["604","INSTRUMENTOS MUSICALES NAC"],["605","MONTABLES"],["606","VAJILLAS INFANTILES"],["607","JUEGOS DIDACTICOS"],["608","VARIOS JUGUETERIA"],["701","JUEGO DE OLLAS"],["702","N/A"],["703","N/A"],["704","CALDEROS FUNDIDOS"],["705","CHOCOLATERAS"],["706","CUCHILLOS"],["707","OLLA A PRESION"],["708","N/A"],["711","SARTENES CACEROLAS Y PAILAS"],["712","OLLAS INDIVIDUALES"],["717","CALDEROS INDUSTRIALES"],["718","VARIOS ALUMINIO"],["721","LECHERAS"],["722","BATERIAS DE COCINA"],["801","COPAS"],["802","REFRACTARIA"],["803","FRASCOS CRISTALERIA"],["804","N/A"],["805","LICORERAS"],["806","SET'S Y ESTUCHES"],["808","VASOS CRISTAL"],["809","VARIOS CRISTALERIA"],["811","N/A"],["812","ACUARIOS FLOREROS Y JARRONES"],["813","N/A"],["814","N/A"],["816","PLATO BANDEJA Y CHOCHA CRISTAL"],["901","VAJILLAS DE LOZA"],["902","PLATO BANDEJA Y CHOCHA LOZA"],["903","TAZAS DE LOZA"],["904","POCILLOS DE LOZA"],["905","LOZA VARIOS"],["906","MUGS LOZA"],["907","N/A"],["908","N/A"],["1001","ESCURRIDORES ALAMBRE"],["1002","CLOSET'S"],["1007","VARIOS ALAMBRE"],["1201","COLCHONES"],["1202","COLCHONETAS"],["1203","MUEBLES"],["1301","NEVERAS DE ICOPOR"],["1400","N/A"],["1401","CINTAS"],["1402","TUBITO DE FIBRAS"],["1403","BOMBILLOS"],["1404","CEPILLOS DENTALES"],["1405","GLOBOS DE FIESTA"],["1406","REPUESTOS"],["1407","GASEOSAS Y REFRESCOS"],["1408","N/A"],["1409","N/A"],["1410","BOMBAS  ROCIAR"],["1415","COJINES"],["1417","TABLA DE PICADO"],["1418","REGULADORES"],["1420","GEL´S"],["1421","ARTICULOS DE MADERA"],["1422","ESPEJOS"],["1423","ARTICULOS NO CODIFICADOS"],["1424","BAMBU"],["1425","DECORACIONES"],["1426","ARTICULOS CARTAGENA"],["1427","NACIONALES VARIOS"],["1428","ASADORES Y PARRILLAS"],["1500","CORRECCION EN PRECIOS"],["1502","PARA CORREGIR DIFERENCIAS EN P"],["1503","BICICLETAS GIMNASIA"],["1504","BICICLETAS"],["1600","MELCOCHAS"],["1701","MOLINOS"],["1703","UTENSILIOS DE COCINA"],["1704","PINZAS"],["1705","CUBIERTOS (SET E INDIVIDUAL)"],["1706","N/A"],["1707","N/A"],["1708","VARIOS FUNDIDO"],["1801","HAMACAS"],["1802","TOALLAS"],["1901","CORTINAS"],["1902","TOLDOS"],["1903","MANTELES"],["1904","DELANTALES"],["1905","ALMOHADAS"],["1906","SABANAS"],["1907","N/A"],["1908","PAÑALERAS"],["1909","ALFOMBRAS Y TAPETES"],["2001","CUCHARAS DESECHABLES"],["2101","MUÑECAS IMPORTADAS"],["2102","CARROS IMPORTADOS"],["2103","ENCARTONADOS IMPORTADOS"],["2104","COMPUTADORES IMPORTADOS"],["2105","MOTOS Y AVIONES"],["2106","INSTRUMENTOS MUSICALES IMP"],["2107","CARRUAJES COCHES Y CUNAS"],["2108","SONAJEROS Y CHILLONES"],["2109","VARIOS JUGUETERIA IMPORTADA"],["2202","PIÑATERIA"],["2301","ASEO"],["5001","COMBOS"]];
 const inpLineas = document.getElementById('lineas');
+const inpSubGrupos = document.getElementById('subgrupos');
 const buscar = document.getElementById('buscar');
 let pro;
 let lin;
@@ -29,18 +31,19 @@ const tp = urlParams.get('tp'); // "value1"
 
 let waitExcel = document.getElementById('cargaExcel');
 document.getElementById('excel').addEventListener('click', ()=>{
-    if (tp == "@inv") location.href = `/descargar_excel?p=${inpProveedores.value}&s=&l=${inpLineas.value}&r=${buscar.value}&tp=${tp}`;
-    else if (tp == "@all") location.href = `/descargar_excel?p=${inpProveedores.value}&s=&l=${inpLineas.value}&r=${buscar.value}&tp=${tp}`;
-    else location.href = `/descargar_excel?p=${inpProveedores.value}&s=&l=${inpLineas.value}&r=${buscar.value}`;
+    if (tp == "@inv") location.href = `/descargar_excel?p=${inpProveedores.value}&s=${inpSubGrupos.value}&l=${inpLineas.value}&r=${buscar.value}&tp=${tp}`;
+    else if (tp == "@all") location.href = `/descargar_excel?p=${inpProveedores.value}&s=${inpSubGrupos.value}&l=${inpLineas.value}&r=${buscar.value}&tp=${tp}`;
+    else location.href = `/descargar_excel?p=${inpProveedores.value}&s=${inpSubGrupos.value}&l=${inpLineas.value}&r=${buscar.value}`;
 })
 
 const buscarDatos = (p, t) => {
     pro = inpProveedores.value;
     lin = inpLineas.value;
+    sub = inpSubGrupos.value;
     ref = buscar.value;
     pagina = p;
     tam = t;  
-    getListaInventarios(pro, "", lin, ref,tam, pagina);
+    getListaInventarios(pro, sub, lin, ref,tam, pagina);
 };
 
 let espera;
@@ -64,6 +67,7 @@ function cargarSelects(tipo, array){
 }
 
 cargarSelects(inpLineas, lineas);
+cargarSelects(inpSubGrupos, subgrupos);
 
 let fin = 0;
 async function getListaInventarios(pro, sub, lin, ref, size, pag){
@@ -213,6 +217,16 @@ function listarInv(lista) {
                 `;
             }
             else{
+                let dsto = (value.descuento/100);
+                let precioDsto = "";
+                let precioMDsto = "";
+                if(value.descuento>0) {
+                    precioDsto= formatearMoneda(value.precioxunidad-(value.precioxunidad*dsto));
+                    precioMDsto = formatearMoneda(value.precioxmayor-(value.precioxmayor*dsto));
+                } else {
+                    precioDsto = "Sin descuento";
+                    precioMDsto = "Sin descuento";
+                }
                 fila += `
                         <td class="px-6 py-4 text-center font-semibold">
                             ${value.bd1}
@@ -229,10 +243,10 @@ function listarInv(lista) {
                         <td class="px-6 py-4 text-center font-semibold">
                             ${formatearMoneda(value.costo)}
                         </td>
-                        <td class="px-6 py-4 text-center font-semibold">
+                        <td class="px-6 py-4 text-center font-semibold" title="Mayor: (${formatearMoneda(value.precioxmayor)} - ${value.descuento}%) --> ${precioMDsto}">
                             ${formatearMoneda(value.precioxmayor)}
                         </td>
-                        <td class="px-6 py-4 text-center font-semibold">
+                        <td class="px-6 py-4 text-center font-semibold" title="Unidad: ${value.descuento}% --> ${precioDsto}">
                             ${formatearMoneda(value.precioxunidad)}
                         </td>
                         <td class="px-6 py-4 text-center font-semibold">

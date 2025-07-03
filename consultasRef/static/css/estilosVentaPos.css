@@ -1,0 +1,284 @@
+/* =========================================================
+   PLASDECOR POS — Tema "CleanBlue" v1 - Jhony Melendez
+   --------------------------------------------------------
+   • Paleta principal: Azul corporativo (#0060B6) y Magenta (#BB105C)
+   • Layout claro, bordes finos, tipografía Inter.
+   • Labels arriba, inputs debajo. Tabla compacta.
+   ========================================================= */
+
+/*******************  TOKENS  *******************/
+:root {
+  /* Colores básicos */
+  --c-blue:      #0060B6;
+  --c-magenta:   #BB105C;
+  --c-bg:        #FFFFFF;
+  --c-bg-soft:   #F5F8FA;
+  --c-border:    #D7DFE6;
+  --c-text:      #243447;
+  --c-text-soft: #6E7A89;
+  --c-success:   #2EBD6B;
+  --c-danger:    #E53E3E;
+  /* Fuente */
+  --ff-base: 'Inter', 'Segoe UI', sans-serif;
+  --ff-mono: 'Roboto Mono', monospace;
+  /* Spacing */
+  --sp-1: .25rem;  /* 4px */
+  --sp-2: .5rem;   /* 8px */
+  --sp-3: 1rem;    /* 16px */
+  --sp-4: 1.5rem;  /* 24px */
+  --sp-5: 2rem;    /* 32px */
+  /* Radius & shadow */
+  --radius: 6px;
+  --shadow-sm: 0 2px 6px rgba(0,0,0,.06);
+}
+
+/*******************  RESET  *******************/
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--ff-base);background:var(--c-bg);color:var(--c-text);line-height:1.45}
+img{max-width:100%;display:block}
+
+/*******************  CONTENEDOR  *******************/
+.pos-container{max-width:1400px;margin:var(--sp-5) auto;padding:var(--sp-5);border:1px solid var(--c-border);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+
+/*******************  HEADER  *******************/
+.pos-header{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--sp-4);border-bottom:2px solid var(--c-blue);padding-bottom:var(--sp-3)}
+.logo-info{display:flex;gap:var(--sp-3);align-items:center}
+.logo{height:100px}
+.pos-header h1{font-size:1.5rem;color:var(--c-text);font-weight:700;margin-bottom:var(--sp-1)}
+.pos-header p{font-size:.875rem;color:var(--c-text-soft)}
+.venta-numero{font-size:1.2rem;font-weight:600;color:var(--c-magenta);align-self:center}
+.fecha-hora{text-align:right;font-size:.8rem;color:var(--c-text-soft)}
+
+/*******************  SECCIÓN DE TITULOS  *******************/
+section{margin-top:var(--sp-5)}
+section h2{font-size:1.2rem;color:var(--c-blue);margin-bottom:var(--sp-3);border-bottom:2px solid var(--c-border);padding-bottom:var(--sp-1)}
+
+/*******************  BUSCAR FACTURA  *******************/
+.venta-numero {display: flex;flex-direction: column;align-items: center;gap: 8px;font-size: 1rem;font-weight: 600;color: var(--c-magenta);min-width: 280px;}
+
+#numero-factura {font-size: 1.25rem;font-weight: 600;color: var(--c-magenta);background: #fff4fa;padding: 6px 12px;border-radius: 8px;box-shadow: 0 2px 6px rgba(255, 0, 128, 0.1);transition: transform 0.2s ease, box-shadow 0.2s ease;display: inline-flex;align-items: center;gap: 8px;}
+#numero-factura:hover {transform: scale(1.03);box-shadow: 0 4px 12px rgba(255, 0, 128, 0.2);}
+
+/* Contenedor de búsqueda */
+#buscar-factura-container {display: flex;align-items: center;gap: 10px;padding: 10px 14px;background: linear-gradient(145deg, #ffffff, #f0f0f0);border: 1px solid #dcdcdc;border-radius: 12px;box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);max-width: 420px;transition: box-shadow 0.3s ease;}
+
+#buscar-factura-container:hover {box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);}
+
+/* Ícono de búsqueda */
+#buscar-factura-container i.fa-search {font-size: 16px;color: #007bff;}
+
+/* Input estilizado */
+#buscar-factura {flex: 1;padding: 8px 12px;font-size: 15px;border: 1px solid #ccc;border-radius: 8px;outline: none;transition: border-color 0.2s, box-shadow 0.2s;}
+
+#buscar-factura:focus {border-color: #007bff;box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);}
+
+/* Botón con efecto */
+#btn-reimprimir {display: flex;align-items: center;gap: 6px;padding: 8px 14px;font-size: 14px;font-weight: 500;background-color: #007bff;color: #fff;border: none;border-radius: 8px;cursor: pointer;transition: background-color 0.25s, transform 0.2s;box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);}
+
+#btn-reimprimir:hover {background-color: #0056b3;transform: translateY(-1px);}
+
+
+/*******************  FORM GRID  *******************/
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--sp-4)}
+.form-grid label{display:block;font-size:.8rem;color:var(--c-text-soft);margin-bottom:var(--sp-1)}
+.form-grid input,.form-grid select{width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--c-border);border-radius:var(--radius);font-size:.95rem;background:#fff;transition:border .2s}
+.form-grid input[readonly]{background:var(--c-bg-soft);color:var(--c-text-soft)}
+.form-grid input:focus,.form-grid select:focus{outline:none;border-color:var(--c-blue);box-shadow:0 0 0 2px rgba(0,96,182,.12)}
+
+/* Ocupa 2 columnas */
+.form-grid .full-width {grid-column: span 2;}
+
+/* ocupe toda la fila (3 o más columnas) */
+.form-grid .full-row {grid-column: 1 / -1;}
+
+
+/*******************  ESCANER, ENTRADAS & SUGERENCIAS  *******************/
+#codigo_barras{width:100%;padding:var(--sp-3);font-size:1.05rem;border:2px solid var(--c-blue);border-radius:var(--radius);margin-bottom:var(--sp-2);margin-left: 150px; transition:box-shadow .2s}
+#codigo_barras:focus{outline:none;box-shadow:0 0 0 3px rgba(0,96,182,.15)}
+#codigo_barras {padding: var(--sp-2) var(--sp-3);font-size: 1rem;}
+
+.form-grid label {display: block;font-size: 1.2rem;color: var(--c-text-soft);margin-bottom: var(--sp-1);font-weight: 500;margin-top: 4px}
+
+
+/* Contenedor principal de sugerencias */
+.sugerencias-busqueda {
+  position: absolute;
+  width: 100%; /* Ocupará el ancho del contenedor padre */
+  max-width: 450px; /* Limitar el ancho máximo como los registros */
+  max-height: 400px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  margin-top: 4px;
+  z-index: 100;
+  display: none;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  color: #1a202c;
+}
+
+/* Elemento individual de sugerencia */
+.sugerencia-item {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #edf2f7;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Eliminar borde del último elemento */
+.sugerencia-item:last-child {
+  border-bottom: none;
+}
+
+/* Código del producto */
+.sugerencia-codigo {
+  font-family: 'Roboto Mono', monospace;
+  color: #718096;
+  font-size: 12px;
+}
+
+/* Nombre del producto */
+.sugerencia-nombre {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Precio del producto */
+.sugerencia-precio {
+  font-weight: 600;
+  color: #2b6cb0;
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* Efecto hover */
+.sugerencia-item:hover {
+  background-color: #f8fafc;
+}
+
+/* Elemento activo/seleccionado */
+.sugerencia-item.active {
+  background-color: #ebf8ff;
+}
+
+/* No hay resultados */
+.sugerencias-no-resultados {
+  padding: 16px;
+  text-align: center;
+  color: #718096;
+  font-size: 13px;
+}
+
+/* Scrollbar personalizada */
+.sugerencias-busqueda::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sugerencias-busqueda::-webkit-scrollbar-track {
+  background: #f7fafc;
+}
+
+.sugerencias-busqueda::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+.sugerencias-busqueda::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+.producto-section {position: relative;}
+
+
+
+.form-grid label {display: block;font-size: 1.2rem;color: var(--c-text-soft);margin-bottom: var(--sp-1);font-weight: 500;margin-top: 4px}
+
+/*******************  TABLA DE PRODUCTOS  *******************/
+.tabla-productos{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:var(--sp-3)}
+.tabla-productos th,.tabla-productos td{border:1px solid var(--c-border);padding:var(--sp-2) var(--sp-3);text-align:center}
+.tabla-productos th{background:var(--c-blue);color:#fff;font-weight:500}
+.tabla-productos tbody tr:nth-child(even){background:var(--c-bg-soft)}
+.tabla-productos tbody tr:hover{background:#eaf2fd}
+/* Cantidad columna */
+.tabla-productos input[type="number"]{width:10ch;max-width:80px;text-align:center}
+
+.tabla-productos td:nth-child(1) { text-align: center; min-width: 90px; font-family: 'Segoe UI', 'Roboto', sans-serif;} /* Código */
+.tabla-productos td:nth-child(2) { text-align: center; min-width: auto; font-family: 'Segoe UI', 'Roboto', sans-serif;} /* Descripción */
+.tabla-productos td:nth-child(4) { text-align: center; min-width: 80px; font-family: 'Segoe UI', 'Roboto', sans-serif; } /* Precio Neto */
+.tabla-productos td:nth-child(5) { text-align: center; min-width: 60px; font-family: 'Segoe UI', 'Roboto', sans-serif;} /* Dscto */
+.tabla-productos td:nth-child(6) { text-align: center; min-width: 60px; font-family: 'Segoe UI', 'Roboto', sans-serif;} /* Cantidad */
+.tabla-productos td:nth-child(7) { text-align: center; min-width: 80px; font-family: 'Segoe UI', 'Roboto', sans-serif; font-weight: bold;} /* Total */
+.tabla-productos td:nth-child(8) { text-align: center; min-width: 60px; font-family: 'Segoe UI', 'Roboto', sans-serif;} /* Acción */
+
+.tabla-productos {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size: 0.88rem;}
+
+.lp-options {display: flex;justify-content: center;gap: 10px; /* Espacio entre radios */}
+.lp-option {display: flex;align-items: center;gap: 4px;}
+
+/* Style Radio */
+.lp-options {display: flex;justify-content: center; gap: 8px;} 
+.lp-option input[type="radio"] {display: none;}
+.lp-option label {display: inline-block;padding: 4px 8px;font-size: 0.85rem;border: 1px solid var(--c-border);border-radius: 6px;cursor: pointer;background-color: #f0f4fa;transition: background-color 0.2s, color 0.2s, border-color 0.2s;}
+.lp-option input[type="radio"]:checked + label {background-color: var(--c-blue);color: white;border-color: var(--c-blue);font-weight: bold;}
+
+/* Campo de cantidad mejorado */
+.cantidad {width: 60px;padding: 6px 10px;border: 1.5px solid var(--c-border);border-radius: 8px;font-size: 0.95rem;text-align: center;font-family: var(--ff-mono);background-color: #f9f9f9;transition: border-color 0.2s, box-shadow 0.2s;}
+
+.cantidad:focus {outline: none;border-color: var(--c-blue);box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);background-color: #fff;}
+
+/* Style Boton Eliminar*/
+.btn-eliminar {background-color: transparent;border: none;color: #e74c3c;font-size: 1.1rem;cursor: pointer;padding: 4px 8px;border-radius: 4px;transition: background-color 0.2s ease, transform 0.2s;}
+
+.btn-eliminar:hover {background-color: rgba(231, 76, 60, 0.1);transform: scale(1.2);}
+
+/*******************  CAJA DE TOTALES  *******************/
+.totales { max-width: 500px; margin-top: var(--sp-4); font-size: 0.95rem; background: #f9f9f9; padding: var(--sp-4); border: 1px solid var(--c-border); border-radius: var(--radius); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); }
+.totales p { display: flex; justify-content: space-between; margin-bottom: var(--sp-2); }
+.totales h3 { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; color: var(--c-success); border-top: 1px solid var(--c-border); padding-top: var(--sp-2); margin-top: var(--sp-3); }
+.totales span { font-family: var(--ff-mono); font-size: 1.1rem; font-weight: bold; }
+
+.monto-recibido-con-cambio { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); margin-top: var(--sp-3); }
+#monto-recibido { width: 140px; padding: var(--sp-2); border: 1px solid var(--c-border); border-radius: var(--radius); font-family: var(--ff-mono); font-size: 1rem; }
+
+.text-rojo {color: red;font-weight: bold;}
+.text-verde {color: green;font-weight: bold;}
+
+
+
+/*******************  BOTONES  *******************/
+.btn-accion { background: linear-gradient(135deg, #cc1f68, #a61850); color: #fff; border: none; padding: 12px; font-size: 1rem; border-radius: var(--radius); cursor: pointer; transition: background 0.2s, transform 0.1s; display: inline-flex; align-items: center; gap: 0.4rem; margin-top: var(--sp-4); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.btn-accion:hover { background: #9a0d4d; transform: translateY(-1px); }
+.btn-accion:active { transform: none; }
+
+/* COPYRIGHT */
+.copyright {font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;font-size: 0.85em;color: #444;text-align: center;margin-top: 20px;margin-bottom: 10px;border-top: 1px solid #ccc;padding-top: 10px;
+  display: flex;justify-content: center;align-items: center;gap: 8px;flex-wrap: nowrap;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+
+.iconos {width: 20px;height: 20px;vertical-align: middle}
+
+/*******************  VALIDACIONES  *******************/
+.campo-invalido {border: 2px solid red !important;}
+
+.error-msg {font-size: 0.75rem;color: red;}
+
+#codigo_barras + .error-msg {
+  display: block;
+  margin-left: 0;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.input-error {border: 2px solid red !important;background-color: #ffeaea}
+
+
+/*******************  RESPONSIVE  *******************/
+@media(max-width:768px){.pos-header{flex-direction:column;align-items:flex-start}.logo{height:80px}.venta-numero{margin-top:var(--sp-2)}.form-grid{grid-template-columns:1fr}}

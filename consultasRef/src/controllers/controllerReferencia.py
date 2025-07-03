@@ -119,10 +119,26 @@ def getReferencia():
 
 
 FILE_PATH = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASE.xlsx'
+FILE_PATH_OUTLET = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASE_OUTLET.xlsx'
+FILE_PATH_OUTLET_DSTO = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASE_OUTLET_DSTO.xlsx'
 FILE_PATH_pulguero = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASE_pulguero.xlsx'
 FILE_PATH_DSTO = r'\\10.0.0.96\Compartida\BaseEtiquetas\BASEDESCUENTOS.xlsx'
-@controllerReferencia.route("/guardarLista", methods=["POST"])
-def guardar_datos():
+@controllerReferencia.route("/guardarLista/<tp>", methods=["POST"])
+def asigna_base(tp):
+    try:
+        if tp == 'la37':
+            print('Asignado al archivo Almacén')
+            return guardar_datos(FILE_PATH, FILE_PATH_DSTO)
+        elif tp == 'outlet':
+            print('Asignado al archivo Outlet')
+            return guardar_datos(FILE_PATH_OUTLET, FILE_PATH_OUTLET_DSTO)
+        else:
+            return jsonify({'error': 'Punto de venta no reconocido.'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+
+def guardar_datos(file, file_dsto):
     try:
         data = request.get_json()
         msg(request.remote_addr, f"Asigna etiquetas a la BASE BarTender.")
@@ -131,9 +147,9 @@ def guardar_datos():
         df1 = pd.DataFrame(datosBASE)
         df1 = df1.drop(columns=['descuento', 'precioDsto'])
         df2 = pd.DataFrame(datosDsto)
-        with pd.ExcelWriter(FILE_PATH) as writer:
+        with pd.ExcelWriter(file) as writer:
             df1.to_excel(writer, index=False)
-        with pd.ExcelWriter(FILE_PATH_DSTO) as writer:
+        with pd.ExcelWriter(file_dsto) as writer:
             df2.to_excel(writer, index=False)
         return jsonify({'message': 'Datos reescritos correctamente'}), 200
     except Exception as e:
@@ -244,7 +260,7 @@ def process_files():
         kardex_bodega_02 = kardex[kardex['BODEGA'] == 2]
 
 
-        kardex_activos = kardex_bodega_02[kardex_bodega_02['ESTADO ARTICULO'].isna() | (kardex_bodega_02['ESTADO ARTICULO'] == '') | (kardex_bodega_02['ESTADO ARTICULO'] == " ")]
+        kardex_activos = kardex_bodega_02[kardex_bodega_02['ESTADO ARTICULO'].isna() | (kardex_bodega_02['ESTADO ARTICULO'] == '') | (kardex_bodega_02['ESTADO ARTICULO'] == " ") | ((kardex_bodega_02['ESTADO ARTICULO'] >= 0) & (kardex_bodega_02['ESTADO ARTICULO'] < 9))]
         print("Cantidad 02: ", len(kardex_bodega_02))
         print("Cantidad 02 Activos: ", len(kardex_activos))
 

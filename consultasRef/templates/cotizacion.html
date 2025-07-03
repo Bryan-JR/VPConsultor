@@ -4,8 +4,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-  <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
   <title>Cotización VP</title>
+  <link rel="shortcut icon" href="/static/img/icono.ico" type="image/x-icon">
   <style>
     :root {
       --azul: #2980C9;
@@ -169,6 +169,44 @@
   color: rgba(0, 0, 0, 0.5); /* Más transparente */
 }
 
+.btnVolver {
+      padding: 8px 16px;
+      margin-top: 8px;
+      background-color: rgb(255, 251, 10);
+      color: rgb(2, 2, 2);
+      border: 0.5px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease;
+      font-weight: bold;
+    }
+
+    .btnGuardar:hover {
+      background-color: #ffe96b;
+      color: #ffffff;
+      
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    input::placeholder {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.5); /* Más transparente */
+}
+
+#fecha-hoy{
+  background-color: #fdfdfd00;
+  border: none;
+  outline: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: #f4f4f4;
+  font-family: 'Segoe UI', sans-serif;
+}
+
 /* Aplica estilo tipo NomPropio */
 input {
   text-transform: capitalize;
@@ -287,60 +325,112 @@ input {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Estilo de mensaje flotante */
 .mensaje-flotante {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background: rgba(0, 128, 0, 0.85); /* Verde para éxito */
-  color: white;
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: bold;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   z-index: 10000;
   animation: fadeout 5s forwards;
+  color: white;
 }
 
-/* Estilo de error */
+/* Verde éxito */
+.mensaje-flotante.success {
+  background: rgba(0, 128, 0, 0.85);
+}
+
+/* Rojo error */
 .mensaje-flotante.error {
-  background: rgba(255, 0, 0, 0.85); /* Rojo para error */
+  background: rgba(255, 0, 0, 0.85);
 }
 
-/* Animación de desvanecimiento */
 @keyframes fadeout {
   0% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
 }
 
-/* Estilo para el borde rojo de los campos con error */
-input {
-  transition: border 0.3s ease; /* Suaviza el cambio de borde */
+
+.buscador-cotizacion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 40px 30px;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-input:invalid {
-  border: 2px solid red; /* Resalta el campo con borde rojo cuando es inválido */
-}
-
-/* Opcional: cambiar el fondo a un color suave para el campo con error */
-input.error {
-  background-color: #f8d7da; /* Color de fondo suave */
-}
-
-.mensaje-flotante {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: rgba(255, 0, 0, 0.85); /* Rojo para error */
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
+.buscador-cotizacion label {
+  font-size: 1rem;
+  color: #2980c9;
   font-weight: bold;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  z-index: 10000;
-  animation: fadeout 5s forwards;
+  font-size: 20px;
+  font-family: sans-serif;
+  margin-left: auto;
+
+  
 }
+
+.buscador-cotizacion input[type="text"] {
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 180px;
+  transition: all 0.3s ease;
+}
+
+.divFecha{
+    padding: 0;
+    position: relative;
+    margin: 0;
+    width: 12em;
+  }
+
+.buscador-cotizacion input[type="text"]:focus {
+  outline: none;
+  border-color: #2c7be5;
+  box-shadow: 0 0 0 2px rgba(44, 123, 229, 0.2);
+}
+
+.buscador-cotizacion button {
+  background-color: #2c7be5;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.buscador-cotizacion button:hover {
+  background-color: #1a5fc3;
+}
+
+.fecha-cotizacion {
+  display: flex;
+  align-items: center;
+  width: 13em;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #2c7be5;
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  gap: 6px;
+  height: 38px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+
 
 /* Animación de desvanecimiento */
 @keyframes fadeout {
@@ -355,12 +445,34 @@ input.error {
     font-size: 12px;
   }
 }
- 
+
+.imprimir-fecha-only {
+  display: none;
+  font-weight: bold;
+  color: black;
+  font-size: 0.95rem;
+  font-family: 'Segoe UI', sans-serif;
+  margin-left: 8px;
+}
+
 
 @media print {
+
   .no-print {
     display: none !important;
   }
+
+  .imprimir-fecha-only {
+    display: inline !important;
+  }
+
+  #fecha-visible {
+    display: inline !important;
+    font-size: 1rem;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+  }
+  
   /* Limpia los inputs */
   input {
     border: none !important;
@@ -405,9 +517,12 @@ input.error {
     font-style: normal;
   }
 }
+  
   </style>
 </head>
 <body>
+
+  <input type="hidden" id="cotizacion-id">
 
   <div class="header">
     <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="Logo Plasdecor">
@@ -421,6 +536,23 @@ input.error {
         <p><strong class="resaltado">N° Cotización:  </strong><strong class="numero-cotizacion">{{ numero_cotizacion }}</strong></p>
     </div>
 </div>
+
+<!-- Fecha visible en pantalla e impresión -->
+<div class="fecha-cotizacion">
+  <strong>Fecha:</strong>
+  <input id="fecha-hoy" type="date" class="no-print imprimir-fecha-input">
+  <span id="fecha-visible" style="display: none;"></span>
+  <span id="fecha-impresion" class="imprimir-fecha-only"></span>
+</div>
+
+<!-- Contenedor editable solo visible en pantalla -->
+<div class="buscador-cotizacion no-print">
+  <label for="numero-buscar" class="editar-cotizacion"><strong>Editar Cotización:</strong></label>
+  <input type="text" id="numero-buscar" placeholder="Ej: VP00027">
+  <button onclick="buscarCotizacion()"><i class="fas fa-search"></i> Cargar</button>
+</div>
+
+
 
   <h2>Información del Cliente</h2>
 
@@ -507,6 +639,11 @@ input.error {
   <div style="text-align: center; margin-top: 40px;">
     <button class="btnGuardar no-print" onclick="guardarYImprimir()"><i class="fas fa-print"></i> Imprimir o Guardar PDF</button>
   </div>
+  <div id="volver-container" class="no-print" style="text-align: center; margin-top: 10px; display: none;">
+    <button class="btnVolver" onclick="window.location.href = '/cotizaciones';">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+  </div>
 
 
   <script>
@@ -538,6 +675,38 @@ function agregarFila() {
   tbody.appendChild(fila);
   actualizarTotales();
 }
+
+function agregarFilaProducto(codigo, nombre, cantidad, precioNeto, tipoIva, precioSinIva, iva, valorNeto) {
+  const tbody = document.querySelector("#tabla-productos tbody");
+  const fila = document.createElement("tr");
+
+  fila.innerHTML = `
+    <td><input type="text" value="${codigo || ''}"></td>
+    <td><input type="text" value="${nombre || ''}"></td>
+    <td><input type="number" min="0" value="${cantidad || 0}" oninput="recalcular(this)"></td>
+    <td>
+      <input type="text" value="${formatearMoneda(precioNeto || 0)}"
+             oninput="recalcular(this)"
+             onblur="formatearMonedaEnCampo(this); recalcular(this)">
+    </td>
+    <td>
+      <select class="iva-select" onchange="recalcular(this)">
+        <option value="1.19" ${tipoIva == 1.19 ? 'selected' : ''}>19%</option>
+        <option value="1.05" ${tipoIva == 1.05 ? 'selected' : ''}>5%</option>
+        <option value="1.0285" ${tipoIva == 1.0285 ? 'selected' : ''}>2.85%</option>
+        <option value="1.00" ${tipoIva == 1.00 ? 'selected' : ''}>0%</option>
+      </select>
+    </td>
+    <td><input type="text" value="${formatearMoneda(precioSinIva || 0)}" readonly></td>
+    <td><input type="text" value="${formatearMoneda(iva || 0)}" readonly></td>
+    <td><input type="text" value="${formatearMoneda(valorNeto || 0)}" readonly></td>
+    <td class="no-print"><button class="btnEliminar" onclick="eliminarFila(this)"><i class="fas fa-trash"></i></button></td>
+  `;
+
+  tbody.appendChild(fila);
+  actualizarTotales();
+}
+
 
     function eliminarFila(btn) {
       const fila = btn.closest("tr");
@@ -680,19 +849,14 @@ function formatearMonedaEnCampo(input) {
 function mostrarMensaje(mensaje, tipo = 'success') {
   const div = document.createElement("div");
   div.textContent = mensaje;
-  div.classList.add('mensaje-flotante'); // Clase común para todos los mensajes
-  
-  // Si es un error, agregamos la clase de error
-  if (tipo === 'error') {
-    div.classList.add('error');
-  }
-
+  div.classList.add("mensaje-flotante", tipo); 
   document.body.appendChild(div);
 
   setTimeout(() => {
     div.remove();
   }, 5000);
 }
+
 
 function validarFormulario() {
   const cliente = document.querySelector("input[placeholder='Digite nombre del cliente o empresa']");
@@ -760,7 +924,31 @@ function limpiarEstilosError() {
   });
 }
 
+function buscarCotizacion() {
+  const numero = document.getElementById("numero-buscar").value;
+  if (!numero) {
+  mostrarMensaje("Por favor, ingrese un número de cotización.", 'error');
+  return;
+}
 
+
+  fetch(`http://10.0.0.96:5050/obtener-cotizacion/${numero}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        cargarCotizacionExistente(data.encabezado, data.detalle);
+        document.getElementById("volver-container").style.display = "block";
+      } else {
+        mostrarMensaje("Cotización no encontrada", true);
+      }
+    })
+    .catch(error => {
+      console.error("Error al buscar cotización:", error);
+      mostrarMensaje("Error al conectar con el servidor", true);
+    });
+}
+
+// Función principal modificada para manejar creación y edición
 function guardarYImprimir() {
   if (!validarFormulario()) {
     return; // Si el formulario no es válido, no hacer nada
@@ -787,41 +975,46 @@ function guardarYImprimir() {
     valor_neto: limpiarValorMonetario(fila.children[7].querySelector("input").value)
   }));
 
-  fetch("/guardar-cotizacion", {
-    method: "POST",
+  const cotizacionId = document.getElementById("cotizacion-id").value;
+  const endpoint = cotizacionId 
+    ? `http://10.0.0.96:5050/editar-cotizacion/${cotizacionId}` 
+    : "http://10.0.0.96:5050/guardar-cotizacion";
+  const method = cotizacionId ? "PUT" : "POST";
+
+  fetch(endpoint, {
+    method: method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ encabezado, detalle })
   })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      mostrarMensaje(`Cotización ${data.numero} guardada con éxito`);
-    window.print();
-    window.location.reload();
+      mostrarMensaje(data.mensaje || "Cotización actualizada con éxito");
+      window.print();
+      if (!cotizacionId) {
+        window.location.reload();
+      }
     } else {
-      alert("Error: " + data.mensaje);
+      mostrarMensaje("Error: " + data.mensaje, true);
     }
   })
-  .catch(err => alert("Error al conectar con el servidor: " + err));
+  .catch(err => {
+    mostrarMensaje("Error al guardar", true);
+    console.error(err);
+  });
 }
 
-function mostrarMensaje(mensaje) {
+function mostrarMensaje(mensaje, tipo = 'success') {
   const div = document.createElement("div");
   div.textContent = mensaje;
   div.classList.add("mensaje-flotante");
-  div.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(0, 128, 0, 0.85);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    z-index: 10000;
-    animation: fadeout 5s forwards;
-  `;
+
+  if (tipo === 'error') {
+    div.classList.add("error");
+  } else {
+    div.classList.add("success");
+  }
+
   document.body.appendChild(div);
 
   setTimeout(() => {
@@ -829,18 +1022,9 @@ function mostrarMensaje(mensaje) {
   }, 5000);
 }
 
-const style = document.createElement("style");
-style.innerHTML = `
-  @keyframes fadeout {
-    0% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-`;
-document.head.appendChild(style);
 
 document.addEventListener("DOMContentLoaded", function () {
-  fetch("/")
+  fetch("http://10.0.0.96:5050/ultimaCot")
     .then(response => response.json())
     .then(data => {
       document.getElementById("numero-cotizacion").value = data.proxima_cotizacion;
@@ -850,6 +1034,71 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("numero-cotizacion").value = "ERROR";
     });
 });
+
+
+
+function cargarCotizacionExistente(encabezado, detalle) {
+  document.getElementById("cotizacion-id").value = encabezado.Id;
+  document.querySelector(".numero-cotizacion").textContent = encabezado.NumeroCotizacion;
+
+  document.querySelector("input[placeholder='Digite nombre del cliente o empresa']").value = encabezado.Cliente || '';
+  document.querySelector("input[placeholder='Digite dirección de entrega']").value = encabezado.Direccion || '';
+  document.querySelector("input[placeholder='Digite ciudad']").value = encabezado.Ciudad || '';
+  document.querySelector("input[placeholder='Digite número de contacto']").value = encabezado.Telefono || '';
+  document.querySelector("input[placeholder='Digite NIT del cliente']").value = encabezado.Nit || '';
+  document.querySelector("input[placeholder='Ejemplo: Contado / Crédito']").value = encabezado.FormaPago || '';
+  document.querySelector("input[placeholder='Digite nombre del vendedor']").value = encabezado.Vendedor || '';
+
+  const tbody = document.querySelector("#tabla-productos tbody");
+  tbody.innerHTML = '';
+
+  detalle.forEach(p => {
+    agregarFilaProducto(
+      p.Codigo,
+      p.NombreProducto,
+      p.Cantidad,
+      p.PrecioNeto,
+      p.TipoIVA,
+      p.PrecioSinIVA,
+      p.IVA,
+      p.ValorNeto
+    );
+  });
+
+  actualizarTotales();
+}
+
+ // Insertar la fecha del día
+  document.getElementById("fecha-hoy").value = obtenerFechaActual();
+  function obtenerFechaActual() {
+      const fecha = new Date();
+      const año = fecha.getFullYear();
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      return `${año}-${mes}-${dia}`;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const inputFecha = document.getElementById("fecha-hoy");
+    const spanFecha = document.getElementById("fecha-visible");
+
+    function formatearFechaISO(fechaISO) {
+      const [a, m, d] = fechaISO.split("-");
+      return `${d}/${m}/${a}`;
+    }
+
+    function actualizarFecha() {
+      if (inputFecha.value) {
+        spanFecha.textContent = formatearFechaISO(inputFecha.value);
+      }
+    }
+
+    // Inicial
+    actualizarFecha();
+
+    // Cuando cambia
+    inputFecha.addEventListener("input", actualizarFecha);
+  });
 
   </script>
 

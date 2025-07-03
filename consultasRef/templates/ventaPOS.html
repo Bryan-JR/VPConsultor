@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="/static/img/vp.ico" type="image/x-icon">
+  <title>Ventas POS - PLASDECOR DE MONTERÍA S.A.S.</title>
+  <meta name="description" content="Sistema de Ventas POS para PLASDECOR DE MONTERÍA S.A.S.">
+
+  <link rel="stylesheet" href="/static/css/estilosVentaPos.css">
+</head>
+<body>
+
+  <div class="pos-container">
+
+    <!-- ::::::::::::::::::::::::::::::: ENCABEZADO ::::::::::::::::::::::::::::::: -->
+
+    <header class="pos-header">
+      <div class="logo-info">
+        <img src="/static/img/logoPOS.png" alt="Logo de la empresa" class="logo"/>
+        <div>
+          <h1>PLASDECOR DE MONTERÍA S.A.S.</h1>
+          <p>NIT: 900334132-2</p>
+          <p>Calle 37 Nº 1B - 65 Montería</p>
+          <p>Tel: 7810779 - 7814558 - 7811620</p>
+        </div>
+      </div>
+     <div class="venta-numero">
+        <p id="numero-factura">
+           Factura Nº: <span id="num-factura">VP00010</span>
+        </p>
+        <div id="buscar-factura-container">
+          <input type="text" id="buscar-factura" placeholder="Ej: VP000xx" />
+          <button id="btn-reimprimir">Imprimir</button>
+        </div>
+      </div>
+      <div class="fecha-hora">
+        <div id="fecha-actual"></div>
+        <div id="hora-actual"></div>
+      </div>
+    </header>
+
+    <!-- ::::::::::::::::::::::::::::::: DATOS DEL CLIENTE ::::::::::::::::::::::::::::::: -->
+
+    <section class="cliente-section">
+      <h2>Datos del Cliente</h2>
+      <div class="form-grid">
+
+<div>
+  <label for="nit">NIT o Cédula</label>
+  <input type="text" id="nit" placeholder="Ingrese NIT o cédula del cliente" required tabindex="1">
+</div>
+
+<div>
+  <label for="nombre_cliente">Nombre / Razón Social</label>
+  <input type="text" id="nombre_cliente" placeholder="Nombre del cliente" readonly tabindex="-1">
+</div>
+
+<div>
+  <label for="telefono">Teléfono</label>
+  <input type="text" id="telefono" placeholder="Teléfono del cliente" readonly tabindex="-1">
+</div>
+
+<div>
+  <label for="ciudad">Ciudad</label>
+  <input type="text" id="ciudad" placeholder="Ciudad" readonly tabindex="-1">
+</div>
+
+<div>
+  <label for="direccion">Dirección</label>
+  <input type="text" id="direccion" placeholder="Dirección del cliente" readonly tabindex="-1">
+</div>
+
+<div>
+  <label for="forma_pago">Medio de Pago</label>
+  <select id="forma_pago" required tabindex="2" required>
+    <option value="" disabled selected>Seleccione Medio de Pago</option>
+    <option value="Contado">CONTADO</option>
+    <option value="Transferencia">TRANSFERENCIA</option>
+    <option value="Efectivo">EFECTIVO</option>
+    <option value="Tarjeta Débito">TARJETA DÉBITO</option>
+    <option value="Tarjeta Crédito">TARJETA CRÉDITO</option>
+    <option value="Consignación">CONSIGNACIÓN</option>
+  </select>
+</div>
+
+
+<div>
+  <label for="vendedor">Caja - Usuario</label>
+  <select id="vendedor" tabindex="3" required>
+    <option value="" disabled selected>Seleccione Vendedor</option>
+    <option value="Viviana Salgado">ALMACÉN 37 - VIVIANA SALGADO</option>
+    <option value="Catalina Castro">ALMACÉN 37 - CATALINA CASTRO</option>
+    <option value="Karen Cogollo">ALMACÉN 37 - KAREN COGOLLO</option>
+    <option value="Katty Puentes">ALMACÉN 37 - KATTY PUENTES</option>
+    <option value="Ana Lopez">OUTLET 20 - ANA LOPEZ</option>
+    <option value="Jessica Atehortua">OUTLET 20 - JESSICA ATERHORTUA</option>
+  </select>
+</div>
+
+    </section>
+
+    <!-- ::::::::::::::::::::::::::::::: ESCANEO DE PRODUCTOS ::::::::::::::::::::::::::::::: -->
+
+      <section class="producto-section">
+        <h2>Escaneo de Productos</h2>
+      <div class="form-grid full-row">
+        <label for="codigo_barras" class="c_barras">Buscar por código o descripción:</label>
+        <input type="text" id="codigo_barras" placeholder="Escanea o escribe descripción..." autofocus>
+        <div id="sugerencias" class="sugerencias-busqueda"></div>
+      </div>
+
+      <table class="tabla-productos">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>LP</th>
+            <th>Precio Neto</th>
+            <th>Dscto</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="detalle-productos">
+          <!-- Productos agregados aparecerán aquí -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ::::::::::::::::::::::::::::::: RESUMEN DE VENTA ::::::::::::::::::::::::::::::: -->
+
+    <section class="resumen-section">
+      <div class="totales">
+
+        <p><strong>Subtotal:</strong> <span id="subtotal">$0.00</span></p>
+        <p><strong>Descuento:</strong> <span id="descuento-total">$0.00</span></p>
+        <h3><strong>Total a Pagar:</strong> <span id="total-general">$0.00</span></h3>
+
+        <div class="monto-recibido-con-cambio">
+          <label for="monto-recibido">Monto Recibido</label>
+          <input type="text" id="monto-recibido" placeholder="$0.00" autocomplete="off" />
+          <p id="cambio" class=""></p>
+        </div>
+
+      </div>
+
+      <button id="imprimir" class="btn-accion">
+          <i class="fas fa-print"></i>Imprimir Ticket
+      </button>
+
+    </section>
+
+<div class="copyright">
+  Elaborado por Dpto.Sistemas<img src="images/vp.ico" alt="Ícono de Admin" class="iconos">Plasdecor de Montería S.A.S. - Copyright © 2025 Todos los Derechos Reservados
+</div>
+
+  </div>
+
+  <!-- ::::::::::::::::::::::::::::::: JS PRINCIPAL ::::::::::::::::::::::::::::::: -->
+
+  <script src="/static/js/mainPOS.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</body>
+</html>

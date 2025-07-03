@@ -40,6 +40,12 @@
                     <option value="">TODOS</option>
                 </select>
             </div>
+            <div class="searchable-select w-80">
+                <label for="subgrupos" class="block mb-2 text-sm font-medium text-gray-900">Subgrupo</label>
+                <select id="subgrupos" onchange="buscarDatos(1, 50);" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="">TODOS</option>
+                </select>
+            </div>
             <div class="searchable-select">
                 <label for="import" class="block mb-2 text-sm font-medium text-gray-900">Exportar</label>
                 <button id="excel" class="flex items-center justify-center gap-1 font-bold bg-green-100 hover:bg-green-200 rounded-lg cursor-pointer text-green-700 py-1 px-2">

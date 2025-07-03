@@ -13,6 +13,7 @@
     position: relative;
     display: flex;
     width: 100%;
+    overflow: hidden;
 }
 
 .izq{
@@ -92,6 +93,12 @@
     transition: all .2s ease-in;
 }
 
+.video{
+    position: absolute;
+    left: 0;
+    width: 29em;
+}
+
 .img{
     position: fixed;
     width: 23em;
@@ -105,7 +112,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* animation: foto 5s infinite; */
+    animation: foto 5s infinite;
 }
 
 input[type="number"]::-webkit-outer-spin-button,

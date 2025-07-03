@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Cotizaciones</title>
+    <!-- Incluye tus estilos CSS aquí -->
+</head>
+<body>
+    <h1>Lista de Cotizaciones</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>NIT</th>
+                <th>Vendedor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cotizacion in cotizaciones %}
+            <tr>
+                <td>{{ cotizacion.NumeroCotizacion }}</td>
+                <td>{{ cotizacion.Fecha.strftime('%d/%m/%Y') if cotizacion.Fecha else '' }}</td>
+                <td>{{ cotizacion.Cliente }}</td>
+                <td>{{ cotizacion.Nit }}</td>
+                <td>{{ cotizacion.Vendedor }}</td>
+                <td>
+                    <a href="{{ url_for('controllerCotizaciones.editar_cotizacion', cotizacion_id=cotizacion.Id) }}" 
+                       class="btn-editar">Editar</a>
+                    <!-- Puedes agregar más acciones como eliminar, imprimir, etc. -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('controllerCotizaciones.index') }}" class="btn-nueva">Nueva Cotización</a>
+</body>
+</html>

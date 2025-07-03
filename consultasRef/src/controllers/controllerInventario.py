@@ -334,30 +334,6 @@ def descargar_excel():
             if ref != "":
                 where += f"and (lp.REFERENCIA LIKE '%{ref}%' or lp.DESCRIPCION LIKE '%{ref}%')"
                 i += 1
-
-        # sql = f'''
-        #     SELECT
-        #         lp.REFERENCIA,
-        #         lp.DESCRIPCION,
-        #         i.PROVEEDOR,
-        #         lp.UNIDAD AS "U/E",
-        #         i.LINEA,
-        #         SUM(CASE WHEN i.BODEGA = '1' THEN i.EXISTENCIA ELSE 0 END) AS 'BD1',
-        #         SUM(CASE WHEN i.BODEGA = '2' THEN i.EXISTENCIA ELSE 0 END) AS 'BD2',
-        #         -- SUM(CASE WHEN i.BODEGA = '3' THEN i.EXISTENCIA ELSE 0 END) AS 'BD3',
-        #         -- SUM(CASE WHEN i.BODEGA = '7' THEN i.EXISTENCIA ELSE 0 END) AS 'BD7',
-        #         SUM(CASE WHEN i.BODEGA = '20' THEN i.EXISTENCIA ELSE 0 END) AS 'BD20',
-        #         lp.DESCUENTO,
-        #         (SELECT CASE WHEN inv_b1.COSTO = 0 THEN ISNULL((SELECT inv_b2.COSTO FROM Inventarios AS inv_b2 WHERE inv_b2.REFERENCIA = lp.REFERENCIA AND inv_b2.BODEGA = '2'), 0) ELSE inv_b1.COSTO END FROM Inventarios AS inv_b1 WHERE inv_b1.REFERENCIA = lp.REFERENCIA AND inv_b1.BODEGA = '1') AS 'COSTO',
-        #         lp.PRECIOXMAYOR,
-        #         lp.PRECIOXUNIDAD,
-        #         (SELECT FECHA FROM UltimaFechaCompra as fc WHERE fc.REFERENCIA = lp.REFERENCIA) as 'FECHACOMPRA'
-        #     FROM ListaPreciosLectores as lp INNER JOIN Inventarios as i
-        #         ON lp.REFERENCIA = i.REFERENCIA
-        #         WHERE i.BODEGA IN ('1', '2', '20') {where}
-        #     GROUP BY lp.REFERENCIA, lp.DESCRIPCION, lp.UNIDAD, i.LINEA, lp.DESCUENTO, lp.PRECIOXMAYOR, lp.PRECIOXUNIDAD, i.PROVEEDOR
-        #     ORDER BY lp.DESCRIPCION ASC
-        # '''
         
         sql = f'''
             SELECT
@@ -490,12 +466,24 @@ def actualizaciones():
     except Exception as e:
         print("Error al actualizar: ", e)
 
+
+scheduler = BackgroundScheduler()
 def iniciarCargue():
     try:
-        scheduler = BackgroundScheduler()
-        scheduler.add_job(actualizaciones, 'interval', seconds=40)
-        scheduler.start()
+        existing_job = scheduler.get_job('actualizaciones_id')
+        if not existing_job:
+            scheduler.add_job(
+                actualizaciones,
+                'interval',
+                seconds=40,
+                id='actualizaciones_id',
+                max_instances=1,
+                coalesce=True
+            )
+
+            scheduler.start()
     except Exception as e:
         print(e)
+
 
 iniciarCargue()

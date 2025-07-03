@@ -12,13 +12,19 @@
 </head>
 <body class="bg-white max-h-full h-full bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')]">
  
- <div class="p-4">
+ <div class="p-2">
     <div class="">
-        <div class="grid grid-cols-3 gap-4 mb-4">
-            
-            <div style="height: 11em; flex-direction: column;" class="flex col-span-1 items-center gap-2 py-4 rounded">
+        <div class="grid grid-cols-3 gap-2 mb-4">
+            <div style="height: 11em; flex-direction: column;" class="flex col-span-1 items-center gap-1 py-1 rounded">
                 <img src="/static/img/Logo.png" class="mx-auto w-48 " alt="PLASDECOR Logo" />
-                <h2 class="justify-center text-center font-bold">GENERADOR DE ETIQUETAS</h2>
+                <form class="max-w-sm mx-auto">
+                    <select id="pto_venta" class="block w-full p-1 mb-1 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                        <option selected>PUNTO DE VENTA</option>
+                        <option value="la37">ALMACÉN LA 37</option>
+                        <option value="outlet">OUTLET</option>
+                    </select>
+                </form>
+                <h2 class="justify-center my-1 text-center font-bold">GENERADOR DE ETIQUETAS</h2>
                 <div class="grid grid-cols-2 gap-1">
                     <div id="contBtn" class="flex items-center col-span-2 justify-center">
                         <button type="button" onclick="mandarLista();" class="flex gap-2 text-white font-bold bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-2 py-2 text-center">

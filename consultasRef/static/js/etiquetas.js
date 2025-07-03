@@ -294,53 +294,78 @@ tab.addEventListener('change', ()=> {
     limpiarLista();
 });
 
+let pto_venta = document.getElementById("pto_venta");
+let local = localStorage.getItem('pto_venta');
+if(local){
+    pto_venta.value = local;
+    pto_venta.disabled = true;
+}
+
+
+pto_venta.addEventListener('change', () => {
+    let valor = pto_venta.value;
+    if (valor == "la37" || valor == "outlet") {
+        localStorage.setItem('pto_venta', valor)
+        pto_venta.disabled = true;
+    }
+})
 
 function mandarLista() {
-    if(listaRef.length>0){
-        let ruta = "/guardarLista";
-        if(tab.value == "pulguero") ruta = "/guardarPulguero";
-        else ruta = "/guardarLista";
-        // listaRef.push({
-        //     "descripcion": "",
-        //     "codigo": "",
-        //     "ref": "",
-        //     "precio": "** CORTAR **",
-        //     "cantidad": 3,
-        //     "descuento": 0,
-        //     "precioDsto": 0,
-        //     "codBarras": 0,
-        // });
-        axios.post(ruta, listaRef)
-        .then(resp => {
-            limpiarLista();
-            Swal.fire({
-                title: "¡Cargadas Correctamente!",
-                text: "Actualiza la aplicación de etiquetas",
-                icon: "success",
-                showConfirmButton: false,
-                showCloseButton: true,
-                timer: 30000
-            });
-        })
-        .catch(err => {
+    let ptoVenta = pto_venta.value;
+    if(ptoVenta=="la37"||ptoVenta=="outlet"){
+        if(listaRef.length>0){
+            let ruta = "/guardarLista/"+ptoVenta;
+            if(tab.value == "pulguero") ruta = "/guardarPulguero";
+            else ruta = "/guardarLista/"+ptoVenta;
+            // listaRef.push({
+            //     "descripcion": "",
+            //     "codigo": "",
+            //     "ref": "",
+            //     "precio": "** CORTAR **",
+            //     "cantidad": 3,
+            //     "descuento": 0,
+            //     "precioDsto": 0,
+            //     "codBarras": 0,
+            // });
+            axios.post(ruta, listaRef)
+            .then(resp => {
+                limpiarLista();
+                Swal.fire({
+                    title: "¡Cargadas Correctamente!",
+                    text: "Actualiza la aplicación de etiquetas",
+                    icon: "success",
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    timer: 30000
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Ocurrió un error",
+                    text: "Contacte con sistemas, error: "+err,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+            })
+        } else {
             Swal.fire({
                 icon: "error",
-                title: "Ocurrió un error",
-                text: "Contacte con sistemas, error: "+err,
+                title: "Lista vacía",
+                text: "Debes agregar productos para poder actualizar",
                 showConfirmButton: false,
                 showCloseButton: true
             });
-        })
+        }
     } else {
-        Swal.fire({
-            icon: "error",
-            title: "Lista vacía",
-            text: "Debes agregar productos para poder actualizar",
+         Swal.fire({
+            icon: "info",
+            title: "Elija un punto de venta",
+            text: "Debe elegir un punto de venta para poder asignar las etiquetas.",
             showConfirmButton: false,
             showCloseButton: true
         });
     }
-    
 }
 
 function nombreBodega(id){

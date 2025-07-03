@@ -171,6 +171,7 @@ input.addEventListener("change", () => {
             info.classList.add('down');
         }, 10000);
     });
+    //playVideoAtIndex(index + 1);
     retorno = setTimeout(() => {
         input.value = "";
         input.focus();
@@ -186,3 +187,31 @@ input.addEventListener("change", () => {
     }, tiempo);
     input.value = "";
 });
+
+// Lista de URLs llamando url_for con Flask en jinja2
+const videos = [
+// "/static/videos/PromoPulguero.mp4",
+// "/static/videos/PromoPulgueroFecha22Mayo2025.mp4",
+"/static/videos/PromoPulguero31Mayo2025.mp4",
+"/static/videos/PromoPulguero31Mayo2025.mp4",
+"/static/videos/pulgueroAnuncio.mp4"
+];
+const videoElement = document.getElementById('vid');
+let index = 0;
+function playVideoAtIndex(i) {
+    if (i >= videos.length) {
+        index = 0; // Reiniciar secuencia, o comentar esta linea para parar
+        // return; // Si prefieres parar, descomenta esta línea y comenta la línea de reinicio
+    } else {
+        index = i;
+    }
+    videoElement.src = videos[index];
+    videoElement.play().catch((e) => {
+        console.log("No se pudo reproducir: ", e);
+    });
+}
+videoElement.addEventListener('ended', () => {
+playVideoAtIndex(index + 1);
+});
+// Inicia la reproducción con el primer video
+//playVideoAtIndex(0);

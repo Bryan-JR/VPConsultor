@@ -129,7 +129,7 @@ async function getInventario(ref) {
             let totalDisp = 0;
             document.getElementById('inv').innerHTML = '';
             await resp.forEach((item) => {
-                bd = [1, 2, 20];
+                bd = [1, 2, 3, 20];
                 if (bd.includes(item.bodega, 0)) {
                     totalDisp += item.existencia;
                     document.getElementById('inv').innerHTML += `

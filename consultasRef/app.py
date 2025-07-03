@@ -1,17 +1,23 @@
-from flask import Flask, send_from_directory, make_response, redirect, request
+from flask import Flask, send_from_directory, make_response, redirect, request, render_template
 from src.db import engine, Base
-# from flask_socketio import SocketIO
 from waitress import serve
-import ssl
 from src.controllers.controllerReferencia import controllerReferencia
 from src.controllers.controllerArchivo import controllerArchivo
 from src.controllers.controllerInventario import controllerInventario
 from src.controllers.controllerProveedor import controllerProveedor
 from src.controllers.controllerCotizaciones import controllerCotizaciones
+from flask import Flask, send_from_directory, jsonify, request
+from src.controllers.cliente import cliente_bp
+from src.controllers.producto import producto_bp
+from src.controllers.venta import venta_bp
+from src.models.impresion_service import ImpresionService
 import logging
+from flask_cors import CORS
+
 from datetime import datetime, time
 import os
 
+impresor = ImpresionService()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'plasdecor'
@@ -20,6 +26,23 @@ app.register_blueprint(controllerArchivo)
 app.register_blueprint(controllerInventario)
 app.register_blueprint(controllerProveedor)
 app.register_blueprint(controllerCotizaciones)
+app.register_blueprint(venta_bp)
+
+
+# Configuración de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+app.register_blueprint(cliente_bp)
+app.register_blueprint(producto_bp)
+
+# Manejo de errores
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Recurso no encontrado'}), 404
+
+@app.errorhandler(500)
+def server_error(error):
+    return jsonify({'error': 'Error interno del servidor'}), 500
 
 def formatear_moneda(valor):
     formato = "{:,.0f}".format(valor)
@@ -68,6 +91,49 @@ def msg(client, mensaje):
     with open(logFile, "a") as log:
         log.write(f"{msg}\n")
     print(msg)
+
+#Ruta VentasPos
+@app.route('/ventaspos')
+def serve_index():
+    return render_template('ventaPOS.html')
+
+
+# Rutas estáticas
+@app.route('/js/<path:filename>')
+def serve_js(filename):
+    return send_from_directory(os.path.join(app.static_folder, 'js'), filename)
+
+@app.route('/css/<path:filename>')
+def serve_css(filename):
+    return send_from_directory(os.path.join(app.static_folder, 'css'), filename)
+
+@app.route('/images/<path:filename>')
+def serve_images(filename):
+    return send_from_directory(os.path.join(app.static_folder, 'images'), filename)
+
+@app.route('/api/imprimir', methods=['POST'])
+def handle_imprimir():
+    try:
+        datos = request.json
+        
+        if not datos or 'productos' not in datos:
+            return jsonify({
+                'success': False,
+                'message': 'Datos de venta incompletos',
+                'required_fields': ['numero_venta', 'productos', 'subtotal', 'total']
+            }), 400
+        
+        success, message = impresor.imprimir_ticket(datos)
+
+        # SIEMPRE responder 200 si no hay error de código
+        return jsonify({'success': success, 'message': message}), 200
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'Error interno al procesar la impresión',
+            'error': str(e)
+        }), 500
 
 if __name__ == '__main__':
     #app.run(host='0.0.0.0', port=5000, debug=False, ssl_context=context) 
